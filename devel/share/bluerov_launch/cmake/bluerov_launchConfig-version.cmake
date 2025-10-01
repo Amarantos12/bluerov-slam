@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bluerov_launch/share/bluerov_launch/cmake/bluerov_launchConfig-version.cmake

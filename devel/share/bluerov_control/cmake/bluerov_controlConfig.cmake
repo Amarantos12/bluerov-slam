@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bluerov_control/share/bluerov_control/cmake/bluerov_controlConfig.cmake

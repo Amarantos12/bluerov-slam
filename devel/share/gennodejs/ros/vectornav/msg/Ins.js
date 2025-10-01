@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/vectornav/share/gennodejs/ros/vectornav/msg/Ins.js

@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/vectornav/lib/python3/dist-packages/vectornav/__init__.py

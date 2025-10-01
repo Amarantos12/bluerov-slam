@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/vectornav/share/common-lisp/ros/vectornav/msg/_package_Ins.lisp

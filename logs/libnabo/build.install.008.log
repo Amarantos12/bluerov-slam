@@ -1,0 +1,19 @@
+[ 29%] Built target nabo
+[ 41%] Built target usage
+[ 52%] Built target trivial
+[ 64%] Built target knnbucketsize
+[ 76%] Built target knnepsilon
+[ 88%] Built target knnbench
+[100%] Built target knnvalidate
+[36mInstall the project...[0m
+-- Install configuration: "Release"
+-- Up-to-date: /home/hzr/catkin_ws/devel/lib/libnabo.a
+-- Up-to-date: /home/hzr/catkin_ws/devel/include/nabo/nabo.h
+-- Up-to-date: /home/hzr/catkin_ws/devel/include/nabo/third_party/any.hpp
+-- Up-to-date: /home/hzr/catkin_ws/devel/share/doc/libnabo/README.md
+-- Up-to-date: /home/hzr/catkin_ws/devel/share/libnabo/package.xml
+-- Up-to-date: /home/hzr/catkin_ws/devel/lib/libnabo.a
+-- Up-to-date: /home/hzr/catkin_ws/devel/share/libnabo/cmake/libnabo-targets.cmake
+-- Installing: /home/hzr/catkin_ws/devel/share/libnabo/cmake/libnabo-targets-release.cmake
+-- Up-to-date: /home/hzr/catkin_ws/devel/share/libnabo/cmake/libnaboConfig.cmake
+-- Up-to-date: /home/hzr/catkin_ws/devel/share/libnabo/cmake/libnaboConfigVersion.cmake

@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/sonar_oculus/share/common-lisp/ros/sonar_oculus/msg/OculusPing.lisp

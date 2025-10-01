@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bar30_depth/lib/python3/dist-packages/bar30_depth/msg/_Depth.py

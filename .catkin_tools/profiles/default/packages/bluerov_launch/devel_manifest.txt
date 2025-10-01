@@ -1,0 +1,4 @@
+Argonaut/bluerov_launch
+/home/hzr/catkin_ws/devel/.private/bluerov_launch/lib/pkgconfig/bluerov_launch.pc /home/hzr/catkin_ws/devel/lib/pkgconfig/bluerov_launch.pc
+/home/hzr/catkin_ws/devel/.private/bluerov_launch/share/bluerov_launch/cmake/bluerov_launchConfig.cmake /home/hzr/catkin_ws/devel/share/bluerov_launch/cmake/bluerov_launchConfig.cmake
+/home/hzr/catkin_ws/devel/.private/bluerov_launch/share/bluerov_launch/cmake/bluerov_launchConfig-version.cmake /home/hzr/catkin_ws/devel/share/bluerov_launch/cmake/bluerov_launchConfig-version.cmake

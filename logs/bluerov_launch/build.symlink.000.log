@@ -1,0 +1,3 @@
+Symlinking /home/hzr/catkin_ws/devel/lib/pkgconfig/bluerov_launch.pc
+Symlinking /home/hzr/catkin_ws/devel/share/bluerov_launch/cmake/bluerov_launchConfig.cmake
+Symlinking /home/hzr/catkin_ws/devel/share/bluerov_launch/cmake/bluerov_launchConfig-version.cmake

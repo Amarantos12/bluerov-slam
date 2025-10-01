@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/rti_dvl/share/roseus/ros/rti_dvl/manifest.l

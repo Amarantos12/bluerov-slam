@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/waterlinked_gps/share/waterlinked_gps/cmake/waterlinked_gpsConfig.cmake

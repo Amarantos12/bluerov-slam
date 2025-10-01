@@ -1,0 +1,11 @@
+[  2%] Built target gtest
+[ 27%] Built target yaml-cpp-pm
+[ 85%] Built target pointmatcher
+[ 87%] Built target compute_overlap
+[ 90%] Built target icp_customized
+[ 91%] Built target pmicp
+[ 93%] Built target list_modules
+[ 94%] Built target icp_simple
+[ 96%] Built target build_map
+[ 97%] Built target align_sequence
+[100%] Built target icp_advance_api

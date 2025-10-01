@@ -1,0 +1,10 @@
+Not searching for unused variables given on the command line.
+[36m--[0m Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake (found version "1.71.0") found components: thread filesystem system program_options date_time
+[36m--[0m Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake (found version "1.71.0") found components: thread filesystem system program_options date_time chrono
+[36m--[0m libnabo found, version 1.1.2 (include= libs=$<TARGET_FILE:libnabo::nabo>)
+[36m--[0m using built-in yaml-cpp, version 0.3.0
+   -- text-based configuration enabled
+[36m--[0m API Documentation (doxygen): disabled
+[36m--[0m Configuring done
+[36m--[0m Generating done
+[36m--[0m Build files have been written to: /home/hzr/catkin_ws/build/libpointmatcher

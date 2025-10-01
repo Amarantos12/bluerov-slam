@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/kvh_gyro/share/roseus/ros/kvh_gyro/manifest.l

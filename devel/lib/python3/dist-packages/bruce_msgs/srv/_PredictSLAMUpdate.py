@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/lib/python3/dist-packages/bruce_msgs/srv/_PredictSLAMUpdate.py

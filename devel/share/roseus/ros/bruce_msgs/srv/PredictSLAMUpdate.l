@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/roseus/ros/bruce_msgs/srv/PredictSLAMUpdate.l

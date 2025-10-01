@@ -1,0 +1,8 @@
+prefix=/home/hzr/catkin_ws/devel/.private/kvh_gyro
+
+Name: kvh_gyro
+Description: Description of kvh_gyro
+Version: 0.0.1
+Cflags: -I/home/hzr/catkin_ws/devel/.private/kvh_gyro/include
+Libs: -L${prefix}/lib 
+Requires: 

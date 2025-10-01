@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/kvh_gyro/share/gennodejs/ros/kvh_gyro/msg/_index.js

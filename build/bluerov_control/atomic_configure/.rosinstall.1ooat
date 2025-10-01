@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/hzr/catkin_ws/devel/.private/bluerov_control/setup.sh

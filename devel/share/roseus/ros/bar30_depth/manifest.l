@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bar30_depth/share/roseus/ros/bar30_depth/manifest.l

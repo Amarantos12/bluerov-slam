@@ -1,0 +1,15 @@
+Not searching for unused variables given on the command line.
+[36m--[0m Found package version: 1.1.2
+[36m--[0m Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE)
+OpenCL disabled, not looking for it
+[36m--[0m Found OpenMP_C: -fopenmp
+[36m--[0m Found OpenMP_CXX: -fopenmp
+[36m--[0m Found OpenMP: TRUE
+ANN not found, disabling it in benchmarks
+FLANN found, enabling it in benchmarks
+Python version from interpreter is 3.8.10
+Python libs and executable found, looking for numpy and boost::python
+[36m--[0m Could NOT find Boost: missing: python3 (found /usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/BoostConfig.cmake (found version "1.71.0"))
+[36m--[0m Configuring done
+[36m--[0m Generating done
+[36m--[0m Build files have been written to: /home/hzr/catkin_ws/build/libnabo

@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp

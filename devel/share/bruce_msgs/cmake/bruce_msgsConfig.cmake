@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/bruce_msgs/cmake/bruce_msgsConfig.cmake

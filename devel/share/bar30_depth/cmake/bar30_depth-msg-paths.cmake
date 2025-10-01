@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bar30_depth/share/bar30_depth/cmake/bar30_depth-msg-paths.cmake

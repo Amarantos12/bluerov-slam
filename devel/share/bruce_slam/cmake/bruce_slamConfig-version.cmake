@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/bruce_slam/share/bruce_slam/cmake/bruce_slamConfig-version.cmake
