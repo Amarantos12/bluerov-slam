@@ -34,3 +34,7 @@ MAPPING_OCCUPANCY_TOPIC = SLAM_NS + "mapping/occupancy"
 MAPPING_GET_MAP_SERVICE = SLAM_NS + "mapping/get_map"
 SONAR_FEATURE_TOPIC = SLAM_NS + "feature_extraction/feature"
 SONAR_FEATURE_IMG_TOPIC = SLAM_NS + "feature_extraction/feature_img"
+
+# 添加 Aracati 2017 特定话题
+ARACATI_SONAR_TOPIC = "/son/compressed"  # CompressedImage
+ARACATI_ODOM_TOPIC = "/odom_pose"  # Odometry

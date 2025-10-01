@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/python3/dist-packages/sonar_denoise/msg/_OculusFire.py

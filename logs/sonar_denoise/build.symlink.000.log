@@ -1,0 +1,4 @@
+Symlinking /home/hzr/catkin_ws/devel/lib/pkgconfig/sonar_denoise.pc
+Symlinking /home/hzr/catkin_ws/devel/lib/sonar_denoise/sonar_imgtopoint.py
+Symlinking /home/hzr/catkin_ws/devel/share/sonar_denoise/cmake/sonar_denoiseConfig.cmake
+Symlinking /home/hzr/catkin_ws/devel/share/sonar_denoise/cmake/sonar_denoiseConfig-version.cmake

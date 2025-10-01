@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/sonar_denoise/share/gennodejs/ros/sonar_denoise/_index.js

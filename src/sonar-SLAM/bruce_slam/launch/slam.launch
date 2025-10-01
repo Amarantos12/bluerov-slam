@@ -9,6 +9,7 @@
     <arg name="start" default="0.0"/> <!-- 文件处理的起始时间（秒） -->
     <arg name="duration" default="-1"/> <!-- 文件处理的持续时间（秒），-1 表示处理整个文件 -->
     <arg name="kill" default="false"/> <!-- 是否在节点失败时终止整个启动，默认不终止 -->
+    <node name="republish1" type="republish" pkg="image_transport" output="screen" args="compressed in:=/son raw out:=/son" />
 
     <!-- 离线模式 -->
     <group ns="bruce" unless="$(eval arg('file') == '')"> <!-- 当指定了文件路径时，进入离线模式 -->

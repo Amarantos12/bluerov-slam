@@ -1,0 +1,1 @@
+/home/hzr/catkin_ws/devel/.private/sonar_denoise/share/roseus/ros/sonar_denoise/manifest.l
