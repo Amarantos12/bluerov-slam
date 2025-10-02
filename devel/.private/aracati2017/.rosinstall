@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/hzr/catkin_ws/devel/.private/aracati2017/setup.sh

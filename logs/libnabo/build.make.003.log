@@ -1,7 +1,0 @@
-[ 29%] Built target nabo
-[ 41%] Built target usage
-[ 52%] Built target knnbench
-[ 76%] Built target knnepsilon
-[ 76%] Built target knnbucketsize
-[ 88%] Built target knnvalidate
-[100%] Built target trivial

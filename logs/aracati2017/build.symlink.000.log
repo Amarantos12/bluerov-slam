@@ -1,0 +1,5 @@
+Symlinking /home/hzr/catkin_ws/devel/lib/pkgconfig/aracati2017.pc
+Symlinking /home/hzr/catkin_ws/devel/lib/aracati2017/odom
+Symlinking /home/hzr/catkin_ws/devel/lib/aracati2017/aerial_image
+Symlinking /home/hzr/catkin_ws/devel/share/aracati2017/cmake/aracati2017Config-version.cmake
+Symlinking /home/hzr/catkin_ws/devel/share/aracati2017/cmake/aracati2017Config.cmake

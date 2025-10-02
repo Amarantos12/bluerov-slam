@@ -11,5 +11,6 @@ export CMAKE_PREFIX_PATH="/home/hzr/catkin_ws/devel/.private/sonar_denoise:$CMAK
 export LD_LIBRARY_PATH="/home/hzr/catkin_ws/devel/.private/sonar_denoise/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/hzr/catkin_ws/build/sonar_denoise'
+export PYTHONPATH="/home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/python3/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/hzr/catkin_ws/devel/.private/sonar_denoise/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/hzr/catkin_ws/src/sonar_denoise:$ROS_PACKAGE_PATH"
