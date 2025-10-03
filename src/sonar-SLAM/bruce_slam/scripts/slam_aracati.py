@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 
 import rospy
+import threading  # 添加threading导入，用于Event
 from bruce_slam.utils.io import *
 from bruce_slam.slam_ros import SLAMNode
 from bruce_slam.utils.topics import *
+from bruce_slam.slam_ros_aracati import SLAMNode_aracati
+
+# 定义callback_lock_event（如果原代码中未定义）
+callback_lock_event = threading.Event()
 
 def offline(args)->None:
     """运行离线 SLAM 系统，处理 ROS bag 文件中的录制数据
@@ -14,27 +19,24 @@ def offline(args)->None:
 
     # 导入离线模式所需的额外模块
     from rosgraph_msgs.msg import Clock
-    from dead_reckoning_node import DeadReckoningNode
     from feature_extraction_node import FeatureExtraction
-    from gyro_node import GyroFilter
-    from mapping_node import MappingNode
     from bruce_slam.utils import io
+    from nav_msgs.msg import Odometry  # 确保导入Odometry
 
     # 设置离线模式参数
     io.offline = True  # 标记为离线模式
     node.save_fig = False  # 不保存图像
     node.save_data = False  # 不保存数据
 
-    # 初始化所需的节点
-    dead_reckoning_node = DeadReckoningNode()  # 死 reckoning 节点，用于位姿估计
-    dead_reckoning_node.init_node(SLAM_NS + "localization/")  # 初始化死 reckoning 节点，命名空间为 localization
+    # 初始化所需的节点（只保留feature_extraction，因为sonar已修改）
     feature_extraction_node = FeatureExtraction()  # 特征提取节点
     feature_extraction_node.init_node(SLAM_NS + "feature_extraction/")  # 初始化特征提取节点
-    gyro_node = GyroFilter()  # 陀螺仪融合节点
-    gyro_node.init_node(SLAM_NS + "gyro/")  # 初始化陀螺仪节点
-    """mp_node = MappingNode()
-    mp_node.init_node(SLAM_NS + "mapping/")"""  # 地图构建节点（已注释，未使用）
+
+    # 创建时钟发布者
     clock_pub = rospy.Publisher("/clock", Clock, queue_size=100)  # 创建时钟发布者，发布模拟时间
+
+    # 创建odometry发布者，用于将/odom_pose直接转发到LOCALIZATION_ODOM_TOPIC
+    odom_pub = rospy.Publisher(LOCALIZATION_ODOM_TOPIC, Odometry, queue_size=100)
 
     # 遍历 ROS bag 文件中的消息
     for topic, msg in read_bag(args.file, args.start, args.duration, progress=True):
@@ -46,33 +48,28 @@ def offline(args)->None:
             break
 
         # 根据话题分发消息到对应的节点处理
-        if topic == IMU_TOPIC or topic == IMU_TOPIC_MK_II:  # 处理 IMU 数据
-            dead_reckoning_node.imu_sub.callback(msg)  # 调用死 reckoning 节点的 IMU 回调
-        elif topic == DVL_TOPIC:  # 处理 DVL（多普勒测速仪）数据
-            dead_reckoning_node.dvl_sub.callback(msg)  # 调用死 reckoning 节点的 DVL 回调
-        elif topic == DEPTH_TOPIC:  # 处理深度传感器数据
-            dead_reckoning_node.depth_sub.callback(msg)  # 调用死 reckoning 节点的深度回调
-        elif topic == SONAR_TOPIC or SONAR_TOPIC_UNCOMPRESSED:  # 处理声呐数据
+        if topic == SONAR_TOPIC or topic == SONAR_TOPIC_UNCOMPRESSED:  # 处理声呐数据（您已修改为/sonar_oculus_node/ping）
             feature_extraction_node.sonar_sub.callback(msg)  # 调用特征提取节点的声呐回调
-        elif topic == GYRO_TOPIC:  # 处理陀螺仪数据
-            gyro_node.gyro_sub.callback(msg)  # 调用陀螺仪节点的回调
+            clock_pub.publish(Clock(msg.header.stamp))  # 使用sonar时间戳发布clock（备用）
+            # 发布 map 到 world 的坐标变换（使用sonar时间戳，如果没有odom）
+            node.tf.sendTransform((0, 0, 0), [1, 0, 0, 0], msg.header.stamp, "map", "world")
 
-        # 使用 IMU 数据驱动时钟
-        if topic == IMU_TOPIC or topic == IMU_TOPIC_MK_II:
-            clock_pub.publish(Clock(msg.header.stamp))  # 发布 IMU 消息的时间戳作为模拟时钟
-
-            # 发布 map 到 world 的坐标变换，以便在 RViz 中以 z 轴向下的坐标系进行可视化
-            # 【位姿变换】：这里定义了一个静态的 map 到 world 的变换
+        elif topic == ARACATI_ODOM_TOPIC:  # 处理/odom_pose，直接发布到LOCALIZATION_ODOM_TOPIC
+            # print("*********odom_pub*************")
+            odom_pub.publish(msg)  # 直接发布作为odometry输入
+            clock_pub.publish(Clock(msg.header.stamp))  # 使用/odom_pose时间戳发布clock（优先）
+            # 发布 map 到 world 的坐标变换（使用/odom_pose时间戳）
             node.tf.sendTransform((0, 0, 0), [1, 0, 0, 0], msg.header.stamp, "map", "world")
 
 
 if __name__ == "__main__":
 
     # 初始化 ROS 节点，命名为 "slam"
+    # print("slam_aracati start")
     rospy.init_node("slam", log_level=rospy.INFO)
 
     # 创建并初始化 SLAM 节点
-    node = SLAMNode()
+    node = SLAMNode_aracati()
     node.init_node()
 
     # 解析命令行参数

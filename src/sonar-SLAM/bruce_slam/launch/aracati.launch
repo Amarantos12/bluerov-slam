@@ -14,14 +14,14 @@
     <group ns="bruce" unless="$(eval arg('file') == '')"> <!-- 当指定了文件路径时，进入离线模式 -->
         <group ns="slam"> <!-- SLAM 命名空间 -->
         
-            <!-- 加载死 reckoning 的配置文件 -->
-            <rosparam command="load" file="$(find bruce_slam)/config/dead_reckoning.yaml" ns="localization"/>
+            <!-- 加载死 reckoning 的配置文件 --> <!-- 注释掉，因为使用/odom_pose代替 -->
+            <!-- <rosparam command="load" file="$(find bruce_slam)/config/dead_reckoning.yaml" ns="localization"/> -->
             <!-- 加载特征提取的配置文件 -->
             <rosparam command="load" file="$(find bruce_slam)/config/feature.yaml" ns="feature_extraction"/>
-            <!-- 加载陀螺仪的配置文件 -->
-            <rosparam command="load" file="$(find bruce_slam)/config/gyro.yaml" ns="gyro"/>
+            <!-- 加载陀螺仪的配置文件 --> <!-- 注释掉，因为使用/odom_pose代替 -->
+            <!-- <rosparam command="load" file="$(find bruce_slam)/config/gyro.yaml" ns="gyro"/> -->
             <!-- 启动 SLAM 节点，处理录制文件 -->
-            <node pkg="bruce_slam" name="slam" type="slam_node.py" output="screen"
+            <node pkg="bruce_slam" name="slam" type="slam_aracati.py" output="screen"
                 args="--file $(arg file) --start=$(arg start) --duration=$(arg duration)" required="$(arg kill)">
                 <!-- 加载 SLAM 配置文件 -->
                 <rosparam command="load" file="$(find bruce_slam)/config/slam.yaml" subst_value="true"/>
@@ -35,23 +35,20 @@
     <group ns="bruce" if="$(eval arg('file') == '')"> <!-- 当未指定文件路径时，进入在线模式 -->
         <group ns="slam"> <!-- SLAM 命名空间 -->
 
-            <!-- 如果未使用卡尔曼滤波，启动陀螺仪融合节点 -->
-            <node if="$(eval kalman_dead_reckoning == false)" pkg="bruce_slam" name="gyro_fusion" type="gyro_node.py" output="screen">
-                <!-- 加载陀螺仪配置文件 -->
+            <!-- 如果未使用卡尔曼滤波，启动陀螺仪融合节点 --> <!-- 注释掉，因为使用/odom_pose代替 -->
+            <!-- <node if="$(eval kalman_dead_reckoning == false)" pkg="bruce_slam" name="gyro_fusion" type="gyro_node.py" output="screen">
                 <rosparam command="load" file="$(find bruce_slam)/config/gyro.yaml"/>
-            </node>
+            </node> -->
 
-            <!-- 如果未使用卡尔曼滤波，启动死 reckoning 节点 -->
-            <node if="$(eval kalman_dead_reckoning == false)" pkg="bruce_slam" name="dead_reckoning" type="dead_reckoning_node.py" output="screen">
-                <!-- 加载死 reckoning 配置文件 -->
+            <!-- 如果未使用卡尔曼滤波，启动死 reckoning 节点 --> <!-- 注释掉，因为使用/odom_pose代替 -->
+            <!-- <node if="$(eval kalman_dead_reckoning == false)" pkg="bruce_slam" name="dead_reckoning" type="dead_reckoning_node.py" output="screen">
                 <rosparam command="load" file="$(find bruce_slam)/config/dead_reckoning.yaml"/>
-            </node>
+            </node> -->
 
-            <!-- 如果启用了卡尔曼滤波，启动卡尔曼滤波节点 -->
-            <node if="$(eval kalman_dead_reckoning == true)" pkg="bruce_slam" name="kalman" type="kalman_node.py" output="screen">
-                <!-- 加载卡尔曼滤波配置文件 -->
+            <!-- 如果启用了卡尔曼滤波，启动卡尔曼滤波节点 --> <!-- 注释掉，因为使用/odom_pose代替 -->
+            <!-- <node if="$(eval kalman_dead_reckoning == true)" pkg="bruce_slam" name="kalman" type="kalman_node.py" output="screen">
                 <rosparam command="load" file="$(find bruce_slam)/config/kalman.yaml"/>
-            </node>
+            </node> -->
             
             <!-- 启动特征提取节点 -->
             <node pkg="bruce_slam" name="feature_extraction" type="feature_extraction_node.py" output="screen">
@@ -60,7 +57,7 @@
             </node>
 
             <!-- 启动 SLAM 节点 -->
-            <node pkg="bruce_slam" name="slam" type="slam_node.py" output="screen">
+            <node pkg="bruce_slam" name="slam" type="slam_aracati.py" output="screen">
                 <!-- 加载 SLAM 配置文件 -->
                 <rosparam command="load" file="$(find bruce_slam)/config/slam.yaml" subst_value="true"/>
                 <!-- 设置是否启用 SLAM 参数 -->

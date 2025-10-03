@@ -171,6 +171,10 @@ catkin_install_python(PROGRAMS
   scripts/sonar_imgtopoint.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+catkin_install_python(PROGRAMS
+  scripts/odom_pose.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

@@ -1,5 +1,6 @@
 <launch>
 
+  <!-- <node name="republish1" type="republish" pkg="image_transport" output="screen" args="compressed in:=/son raw out:=/son" /> -->
   <arg name="bag_file" default="/home/hzr/rosbag/ARACATI_2017_8bits_full.bag"/>
   <arg name="image_path" default="$(find aracati2017)/maps/2021-12.yaml"/>
 

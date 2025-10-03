@@ -23,16 +23,20 @@ from bruce_slam import pcl
 from sonar_oculus.msg import OculusPing
 
 
-class SLAMNode(SLAM):
+class SLAMNode_aracati(SLAM):
     """SLAM 节点类，将 slam.py 的功能集成到 ROS 环境中
     """
     
     def __init__(self):
-        super(SLAMNode, self).__init__()  # 调用父类 SLAM 的构造函数
+        super(SLAMNode_aracati, self).__init__()  # 调用父类 SLAM 的构造函数
 
         # 初始化线程锁
         self.lock = threading.RLock()
         self.pub_num,self.slam_callback_num = 0,0
+
+        # 添加最新消息存储
+        self.latest_feature = None
+        self.latest_odom = None
 
     def init_node(self, ns="~")->None:
         """配置 SLAM 节点，加载参数并初始化订阅者和发布者
@@ -40,7 +44,6 @@ class SLAMNode(SLAM):
         Args:
             ns (str, optional): 节点的命名空间，默认为 "~"
         """
-        # print("SLAMNode init_node")
 
         # 关键帧参数，控制添加关键帧的频率
         self.keyframe_duration = rospy.get_param(ns + "keyframe_duration")  # 关键帧时间间隔
@@ -98,6 +101,10 @@ class SLAMNode(SLAM):
         # 注册同步回调函数
         self.time_sync.registerCallback(self.SLAM_callback)
 
+        # 添加直接订阅以确保回调触发
+        rospy.Subscriber(SONAR_FEATURE_TOPIC, PointCloud2, self.feature_callback)
+        rospy.Subscriber(LOCALIZATION_ODOM_TOPIC, Odometry, self.odom_callback)
+
         # 定义位姿发布者
         self.pose_pub = rospy.Publisher(
             SLAM_POSE_TOPIC, PoseWithCovarianceStamped, queue_size=10)  # 发布优化后的位姿
@@ -133,6 +140,24 @@ class SLAMNode(SLAM):
         # 调用配置函数
         self.configure()
         loginfo("SLAM 节点初始化完成")
+
+    def feature_callback(self, feature_msg: PointCloud2):
+        self.latest_feature = feature_msg
+        self.try_call_slam()
+
+    def odom_callback(self, odom_msg: Odometry):
+        self.latest_odom = odom_msg
+        self.try_call_slam()
+
+    def try_call_slam(self):
+        if self.latest_feature is None or self.latest_odom is None:
+            return
+        time_diff = abs((self.latest_feature.header.stamp - self.latest_odom.header.stamp).to_sec())
+        if time_diff <= self.feature_odom_sync_max_delay:
+            self.SLAM_callback(self.latest_feature, self.latest_odom)
+            # 可选: 清空以避免重复调用
+            # self.latest_feature = None
+            # self.latest_odom = None
 
     @add_lock
     def sonar_callback(self, ping:OculusPing)->None:
