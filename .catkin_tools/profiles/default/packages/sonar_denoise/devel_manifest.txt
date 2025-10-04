@@ -5,7 +5,9 @@ sonar_denoise
 /home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/python3/dist-packages/sonar_denoise/msg/__init__.py /home/hzr/catkin_ws/devel/lib/python3/dist-packages/sonar_denoise/msg/__init__.py
 /home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/python3/dist-packages/sonar_denoise/msg/_OculusPing.py /home/hzr/catkin_ws/devel/lib/python3/dist-packages/sonar_denoise/msg/_OculusPing.py
 /home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/python3/dist-packages/sonar_denoise/msg/_OculusFire.py /home/hzr/catkin_ws/devel/lib/python3/dist-packages/sonar_denoise/msg/_OculusFire.py
+/home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/sonar_denoise/odom_pose.py /home/hzr/catkin_ws/devel/lib/sonar_denoise/odom_pose.py
 /home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/sonar_denoise/sonar_imgtopoint.py /home/hzr/catkin_ws/devel/lib/sonar_denoise/sonar_imgtopoint.py
+/home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/sonar_denoise/dvl_imu_depth.py /home/hzr/catkin_ws/devel/lib/sonar_denoise/dvl_imu_depth.py
 /home/hzr/catkin_ws/devel/.private/sonar_denoise/share/gennodejs/ros/sonar_denoise/_index.js /home/hzr/catkin_ws/devel/share/gennodejs/ros/sonar_denoise/_index.js
 /home/hzr/catkin_ws/devel/.private/sonar_denoise/share/gennodejs/ros/sonar_denoise/msg/_index.js /home/hzr/catkin_ws/devel/share/gennodejs/ros/sonar_denoise/msg/_index.js
 /home/hzr/catkin_ws/devel/.private/sonar_denoise/share/gennodejs/ros/sonar_denoise/msg/OculusPingUncompressed.js /home/hzr/catkin_ws/devel/share/gennodejs/ros/sonar_denoise/msg/OculusPingUncompressed.js

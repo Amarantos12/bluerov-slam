@@ -171,8 +171,14 @@ catkin_install_python(PROGRAMS
   scripts/sonar_imgtopoint.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
 catkin_install_python(PROGRAMS
   scripts/odom_pose.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+catkin_install_python(PROGRAMS
+  scripts/dvl_imu_depth.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

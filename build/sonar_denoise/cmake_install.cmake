@@ -202,6 +202,14 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/sonar_denoise" TYPE PROGRAM FILES "/home/hzr/catkin_ws/build/sonar_denoise/catkin_generated/installspace/sonar_imgtopoint.py")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/sonar_denoise" TYPE PROGRAM FILES "/home/hzr/catkin_ws/build/sonar_denoise/catkin_generated/installspace/odom_pose.py")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/sonar_denoise" TYPE PROGRAM FILES "/home/hzr/catkin_ws/build/sonar_denoise/catkin_generated/installspace/dvl_imu_depth.py")
+endif()
+
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/hzr/catkin_ws/build/sonar_denoise/gtest/cmake_install.cmake")

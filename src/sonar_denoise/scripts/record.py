@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# 接收并发布话题，odom与sonar_oculus/ping话题，并rosbag record生成新的rosbag
 
 import rosbag
 import cv_bridge

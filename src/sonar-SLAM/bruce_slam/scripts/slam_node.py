@@ -44,7 +44,8 @@ def offline(args)->None:
 
         if rospy.is_shutdown():  # 如果 ROS 节点关闭，退出循环
             break
-
+        
+        # print(f"***Processing topic: {topic}, Type: {type(msg)}***")
         # 根据话题分发消息到对应的节点处理
         if topic == IMU_TOPIC or topic == IMU_TOPIC_MK_II:  # 处理 IMU 数据
             dead_reckoning_node.imu_sub.callback(msg)  # 调用死 reckoning 节点的 IMU 回调
@@ -52,7 +53,9 @@ def offline(args)->None:
             dead_reckoning_node.dvl_sub.callback(msg)  # 调用死 reckoning 节点的 DVL 回调
         elif topic == DEPTH_TOPIC:  # 处理深度传感器数据
             dead_reckoning_node.depth_sub.callback(msg)  # 调用死 reckoning 节点的深度回调
-        elif topic == SONAR_TOPIC or SONAR_TOPIC_UNCOMPRESSED:  # 处理声呐数据
+        elif topic == SONAR_TOPIC or topic == SONAR_TOPIC_UNCOMPRESSED:  # 处理声呐数据
+            # print(f"***sonar topic: {topic}, Type: {type(msg)}***")
+            # print(f"SONAR_TOPIC: {SONAR_TOPIC}\nSONAR_TOPIC_UNCOMPRESSED: {SONAR_TOPIC_UNCOMPRESSED}")
             feature_extraction_node.sonar_sub.callback(msg)  # 调用特征提取节点的声呐回调
         elif topic == GYRO_TOPIC:  # 处理陀螺仪数据
             gyro_node.gyro_sub.callback(msg)  # 调用陀螺仪节点的回调

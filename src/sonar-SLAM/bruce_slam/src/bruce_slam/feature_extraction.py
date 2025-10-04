@@ -118,6 +118,7 @@ class FeatureExtraction(object):
             self.sonar_sub = rospy.Subscriber(
                 SONAR_TOPIC, OculusPing, self.callback, queue_size=10)
         else:
+            # print("*************")
             self.sonar_sub = rospy.Subscriber(
                 SONAR_TOPIC_UNCOMPRESSED, OculusPingUncompressed, self.callback, queue_size=10)
 
