@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+# 把数据集均分为3份
+
+
 import rosbag
 from tqdm import tqdm
 import rospy

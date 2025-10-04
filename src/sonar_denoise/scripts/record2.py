@@ -1,5 +1,21 @@
-# 生成rosbag
-# 包含话题 /sonar_oculus_node/ping，/son/compressed，/rti/body_velocity/raw，/bar30/depth/raw，/vn100/imu/raw
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+generate_slam_bag_final_optimized.py
+
+这个脚本用于处理 ARACATI 数据集的 ROS bag 文件，将其转换为 Bruce SLAM 系统所需的格式。
+它基于一个经过验证可以正常工作的版本进行优化，增加了注释和选择性赋值。
+
+核心转换逻辑:
+1. 声呐图像处理: /son/compressed -> /sonar_oculus_node/ping
+2. 运动数据处理:
+   - 适配 DeadReckoningNode 的内部实现，通过逆向工程构造输入数据。
+   - DVL速度: (x,y,z)_twist -> (x, -y, -z)_dvl
+   - 深度: 从 /pose_gt 提取
+   - IMU姿态: 构造一个特定的 (roll, pitch, yaw) 组合，以抵消 DeadReckoningNode 的硬编码旋转。
+   - IMU角速度: 进行坐标轴交换和变号，以匹配 DeadReckoningNode 内部姿态变换后的坐标系。
+"""
 
 import rosbag
 import cv_bridge
@@ -12,239 +28,167 @@ from bar30_depth.msg import Depth
 from geometry_msgs.msg import TwistStamped, PoseStamped, Vector3, Quaternion
 from std_msgs.msg import Header
 import tf.transformations as tf_trans
-import math
-from tqdm import tqdm  # For progress bar
-from collections import defaultdict
+from tqdm import tqdm
+import rospy
 
-# Main processing
-input_bag_path = '/home/hzr/rosbag/ARACATI_2017_8bits_full.bag'  # Input bag file
-output_bag_path = '/home/hzr/rosbag/ARACATI_2017_8bits_full_slam.bag'  # Output bag file
+# --- 全局配置 ---
+INPUT_BAG_PATH = '/home/hzr/rosbag/aracati.bag'
+OUTPUT_BAG_PATH = '/home/hzr/rosbag/aracati_slam.bag'
+TIME_SYNC_THRESHOLD = 0.1  # /cmd_vel 和 /pose_gt 之间允许的最大时间差 (秒)
 
-
+# --- 声呐图像转换函数 (保留原逻辑) ---
 def cartesian_to_polar(image, max_range, bearing_range, num_beams, bearing_resolution, origin, reverse_z=1):
-    """
-    Convert Cartesian sonar image to polar coordinates for BlueView P900-130 sonar.
-    """
-    # Get image dimensions
     height, width = image.shape[:2]
-    
-    # Polar image dimensions
     polar_width = num_beams
     polar_height = height
-    
-    # Calculate range resolution
     range_resolution = max_range / polar_height
-    
-    # Generate polar coordinate grid
-    x = np.arange(polar_width)
-    y = np.arange(polar_height)
+    x, y = np.arange(polar_width), np.arange(polar_height)
     X, Y = np.meshgrid(x, y)
-    
-    # Compute polar coordinates (r, θ)
     r = Y * range_resolution
     theta = bearing_range[0] + X * bearing_resolution * reverse_z
-    
-    # Map to Cartesian coordinates (sonar origin, in meters)
-    x1 = r * np.sin(theta)
-    y1 = r * np.cos(theta)
-    
-    # Convert to OpenCV image coordinates
-    map_x = x1 / range_resolution + origin[0]
-    map_y = origin[1] - y1 / range_resolution
-    
-    # Clip coordinates to image bounds
-    map_x = np.clip(map_x, 0, width - 1).astype(np.float32)
-    map_y = np.clip(map_y, 0, height - 1).astype(np.float32)
-    
-    # Remap to create polar image
+    x1, y1 = r * np.sin(theta), r * np.cos(theta)
+    map_x = np.clip(x1 / range_resolution + origin[0], 0, width - 1).astype(np.float32)
+    map_y = np.clip(origin[1] - y1 / range_resolution, 0, height - 1).astype(np.float32)
     polar_image = cv2.remap(image, map_x, map_y, cv2.INTER_CUBIC, borderValue=0)
-    
-    # Ensure uint8
     if polar_image.dtype != np.uint8:
         polar_image = np.clip(polar_image, 0, 255).astype(np.uint8)
-    
     return polar_image
 
 def process_son_compressed(msg, ping_id_counter):
     try:
-        # Initialize CvBridge
         bridge = cv_bridge.CvBridge()
+        image = bridge.compressed_imgmsg_to_cv2(msg, "bgr8")
+        if len(image.shape) == 3:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         
-        # Convert ROS compressed image message to OpenCV image (default encoding)
-        image = bridge.compressed_imgmsg_to_cv2(msg, desired_encoding="bgr8")  # Assume RGB/BGR input
-        
-        # Convert to grayscale if necessary
-        if len(image.shape) == 3:  # Check if image is multi-channel (e.g., RGB)
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
-        
-        # BlueView P900-130 sonar parameters
         max_range = 50.0
         bearing_range_deg = [-65.0, 65.0]
-        bearing_range = [deg * np.pi / 180 for deg in bearing_range_deg]
+        bearing_range = [np.deg2rad(d) for d in bearing_range_deg]
         num_beams = 768
-        bearing_resolution_deg = 130.0 / num_beams
-        bearing_resolution = bearing_resolution_deg * np.pi / 180
+        bearing_resolution = np.deg2rad(130.0 / num_beams)
         origin = (776.5, 848)
         
-        # Convert to polar coordinates
-        polar_image = cartesian_to_polar(
-            image, max_range, bearing_range, num_beams, bearing_resolution, origin, reverse_z=1
+        polar_image = cartesian_to_polar(image, max_range, bearing_range, num_beams, bearing_resolution, origin)
+        
+        oculus_msg = OculusPingUncompressed(
+            header=msg.header,
+            fire_msg=OculusFire(header=msg.header, mode=1, gamma=128, flags=0, range=max_range, gain=0.0, speed_of_sound=1500.0, salinity=35.0),
+            ping_id=ping_id_counter,
+            part_number=1032,
+            start_time=msg.header.stamp.secs,
+            bearings=(np.linspace(bearing_range_deg[0], bearing_range_deg[1], num_beams) * 100).astype(np.int16).tolist(),
+            range_resolution=max_range / polar_image.shape[0],
+            num_ranges=polar_image.shape[0],
+            num_beams=polar_image.shape[1],
+            ping=bridge.cv2_to_imgmsg(polar_image, "mono8")
         )
-        
-        # Create OculusPingUncompressed message
-        oculus_msg = OculusPingUncompressed()
-        
-        # Header
-        oculus_msg.header = msg.header
-        
-        # Fire msg
-        oculus_msg.fire_msg = OculusFire()
-        oculus_msg.fire_msg.header = msg.header
-        oculus_msg.fire_msg.mode = 1  # Low frequency mode
-        oculus_msg.fire_msg.gamma = 128
-        oculus_msg.fire_msg.flags = 0
-        oculus_msg.fire_msg.range = max_range
-        oculus_msg.fire_msg.gain = 0.0
-        oculus_msg.fire_msg.speed_of_sound = 1500.0
-        oculus_msg.fire_msg.salinity = 35.0
-        
-        # Ping id
-        oculus_msg.ping_id = ping_id_counter
-        
-        # Part number (using Oculus M750d as proxy)
-        oculus_msg.part_number = 1032
-        
-        # Start time
-        oculus_msg.start_time = msg.header.stamp.secs
-        
-        # Bearings (int16, centi-degrees)
-        bearings_deg = np.linspace(bearing_range_deg[0], bearing_range_deg[1], num_beams)
-        oculus_msg.bearings = (bearings_deg * 100).astype(np.int16).tolist()
-        
-        # Range resolution
-        oculus_msg.range_resolution = max_range / polar_image.shape[0]
-        
-        # Num ranges and beams
-        oculus_msg.num_ranges = polar_image.shape[0]
-        oculus_msg.num_beams = polar_image.shape[1]
-        
-        # Ping data (sensor_msgs/Image)
-        oculus_msg.ping = Image()
         oculus_msg.ping.header = msg.header
-        oculus_msg.ping.height = polar_image.shape[0]
-        oculus_msg.ping.width = polar_image.shape[1]
-        oculus_msg.ping.encoding = "mono8"
-        oculus_msg.ping.is_bigendian = 0
-        oculus_msg.ping.step = polar_image.shape[1]  # bytes per row (mono8: 1 byte per pixel)
-        oculus_msg.ping.data = polar_image.tobytes()
-        
         return oculus_msg, ping_id_counter + 1
     
-    except cv_bridge.CvBridgeError as e:
-        print("CvBridge Error: %s" % e)
-        return None, ping_id_counter
     except Exception as e:
-        print("Error in processing: %s" % str(e))
+        rospy.logwarn("Error processing sonar image: %s", str(e))
         return None, ping_id_counter
 
-# Initialize variables
-ping_id_counter = 0
-pose_gt_dict = {}  # Dictionary to store /pose_gt messages by timestamp (sec)
+def main():
+    rospy.loginfo("Starting ROS bag processing...")
+    rospy.loginfo("Input bag: %s", INPUT_BAG_PATH)
+    rospy.loginfo("Output bag: %s", OUTPUT_BAG_PATH)
 
-# First pass: Collect all /pose_gt messages
-with rosbag.Bag(input_bag_path) as input_bag:
-    for topic, msg, t in input_bag.read_messages(topics=['/pose_gt']):
-        time_sec = msg.header.stamp.to_sec()
-        pose_gt_dict[time_sec] = msg
+    # --- 步骤 1: 预处理，缓存 /pose_gt 消息 ---
+    rospy.loginfo("Pass 1: Caching all /pose_gt messages...")
+    pose_gt_dict = {}
+    with rosbag.Bag(INPUT_BAG_PATH, 'r') as input_bag:
+        total_pose_gt = input_bag.get_message_count(topic_filters=['/pose_gt'])
+        with tqdm(total=total_pose_gt, desc="Caching pose_gt", unit="msg") as pbar:
+            for _, msg, t in input_bag.read_messages(topics=['/pose_gt']):
+                pose_gt_dict[t.to_nsec()] = msg
+                pbar.update(1)
+    sorted_pose_gt_times = sorted(pose_gt_dict.keys())
 
-# Count total messages for progress bar
-total_messages = rosbag.Bag(input_bag_path).get_message_count()
-
-# Process bag with progress bar
-with rosbag.Bag(output_bag_path, 'w') as outbag:
-    with tqdm(total=total_messages, desc="Processing ROS bag", unit="msg") as pbar:
-        for topic, msg, t in rosbag.Bag(input_bag_path).read_messages():
-            
-            # Process /son/compressed and write original + new /sonar_oculus_node/ping
-            if topic == '/son/compressed':
-                # Write original message
-                outbag.write(topic, msg, t)
+    # --- 步骤 2: 主处理循环 ---
+    rospy.loginfo("Pass 2: Processing all topics and writing to new bag...")
+    ping_id_counter = 0
+    total_messages = rosbag.Bag(INPUT_BAG_PATH).get_message_count()
+    
+    with rosbag.Bag(OUTPUT_BAG_PATH, 'w') as outbag:
+        with tqdm(total=total_messages, desc="Processing ROS bag", unit="msg") as pbar:
+            for topic, msg, t in rosbag.Bag(INPUT_BAG_PATH).read_messages():
+                if topic == '/son/compressed':
+                    oculus_msg, ping_id_counter = process_son_compressed(msg, ping_id_counter)
+                    if oculus_msg:
+                        outbag.write('/sonar_oculus_node/ping', oculus_msg, t)
                 
-                # Process to generate OculusPingUncompressed
-                oculus_msg, ping_id_counter = process_son_compressed(msg, ping_id_counter)
-                if oculus_msg is not None:
-                    outbag.write('/sonar_oculus_node/ping', oculus_msg, t)
-            
-            # Process /cmd_vel to generate /rti/body_velocity/raw, /bar30/depth/raw, /vn100/imu/raw
-            elif topic == '/cmd_vel':
-                cmd_vel_time_sec = msg.header.stamp.to_sec()
+                elif topic == '/cmd_vel':
+                    import bisect
+                    idx = bisect.bisect_left(sorted_pose_gt_times, t.to_nsec())
+                    candidates = []
+                    if idx > 0: candidates.append(sorted_pose_gt_times[idx - 1])
+                    if idx < len(sorted_pose_gt_times): candidates.append(sorted_pose_gt_times[idx])
+                    
+                    min_time_diff, best_candidate_time = float('inf'), None
+                    for time_nsec in candidates:
+                        diff = abs(t.to_nsec() - time_nsec)
+                        if diff < min_time_diff:
+                            min_time_diff, best_candidate_time = diff, time_nsec
+                    
+                    if best_candidate_time and min_time_diff < TIME_SYNC_THRESHOLD * 1e9:
+                        closest_pose_gt = pose_gt_dict[best_candidate_time]
+                        header = Header(stamp=msg.header.stamp, frame_id='base_link')
+                        
+                        # --- 1. DVL 消息 (增加了选择性赋值) ---
+                        dvl_msg = DVL(header=header, temperature=-1.0, altitude=-1.0)
+                        vel = msg.twist.linear
+                        # 使用经过验证的坐标系映射: (x,y,z)_twist -> (x, -y, -z)_dvl
+                        dvl_msg.velocity = Vector3(x=vel.x, y=-vel.y, z=-vel.z)
+                        outbag.write('/rti/body_velocity/raw', dvl_msg, t)
+                        
+                        # --- 2. Depth 消息 ---
+                        depth_msg = Depth(header=header, time=header.stamp.to_sec())
+                        depth_msg.depth = -closest_pose_gt.pose.position.z
+                        outbag.write('/bar30/depth/raw', depth_msg, t)
+                        
+                        # --- 3. IMU 消息 ---
+                        imu_msg = Imu(header=header)
+                        
+                        # --- 姿态修正 ---
+                        # 逆向工程 DeadReckoningNode 的行为：提供一组特定的 (roll, pitch, yaw)
+                        # 原材料，使其内部重建后的姿态是我们想要的 (yaw, 0, 0)。
+                        q_orig = closest_pose_gt.pose.orientation
+                        euler_orig = tf_trans.euler_from_quaternion([q_orig.x, q_orig.y, q_orig.z, q_orig.w])
+                        real_yaw = euler_orig[2]
+                        
+                        # 我们需要让 DeadReckoningNode 内部计算出的 roll 为 0。
+                        # 计算公式: output_roll = np.radians(90) + input_roll
+                        # 所以, 我们需要让 input_roll = -np.radians(90)
+                        final_roll = -np.pi / 2.0
+                        final_pitch = 0.0
+                        final_yaw = real_yaw
+                        
+                        quat_final = tf_trans.quaternion_from_euler(final_roll, final_pitch, final_yaw)
+                        imu_msg.orientation = Quaternion(*quat_final)
+
+                        # --- 角速度修正 (增加了选择性赋值) ---
+                        ang_vel = msg.twist.angular
+                        imu_angular_velocity = Vector3()
+                        # 使用经过验证的坐标系映射
+                        if abs(ang_vel.x) > 1e-6: imu_angular_velocity.x = ang_vel.x   # Roll -> Roll
+                        if abs(ang_vel.z) > 1e-6: imu_angular_velocity.y = -ang_vel.z  # Yaw -> -Pitch
+                        if abs(ang_vel.y) > 1e-6: imu_angular_velocity.z = ang_vel.y   # Pitch -> Yaw
+                        imu_msg.angular_velocity = imu_angular_velocity
+                        
+                        # 设置协方差
+                        imu_msg.orientation_covariance = [0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01]
+                        imu_msg.angular_velocity_covariance = [1e-6, 0, 0, 0, 1e-6, 0, 0, 0, 1e-6]
+                        imu_msg.linear_acceleration_covariance[0] = -1.0 # 标记线加速度无效
+                        
+                        outbag.write('/vn100/imu/raw', imu_msg, t)
                 
-                # Find the closest /pose_gt by time
-                closest_pose_gt = None
-                min_time_diff = float('inf')
-                for pose_time_sec in pose_gt_dict:
-                    time_diff = abs(cmd_vel_time_sec - pose_time_sec)
-                    if time_diff < min_time_diff and time_diff < 0.1:  # Threshold 0.1 sec
-                        min_time_diff = time_diff
-                        closest_pose_gt = pose_gt_dict[pose_time_sec]
-                
-                if closest_pose_gt is not None:
-                    # Unified header using /cmd_vel stamp
-                    header = Header()
-                    header.stamp = msg.header.stamp
-                    header.frame_id = 'base_link'  # Assumed frame_id
-                    
-                    # Generate and write DVL (/rti/body_velocity/raw)
-                    dvl_msg = DVL()
-                    dvl_msg.header = header
-                    dvl_msg.velocity = Vector3(
-                        x=msg.twist.linear.x,
-                        y=msg.twist.linear.y,
-                        z=0.0  # 2D motion, z velocity = 0
-                    )
-                    dvl_msg.temperature = 0.0  # Default
-                    dvl_msg.altitude = 0.0  # Default
-                    dvl_msg.time = header.stamp.to_sec()
-                    outbag.write('/rti/body_velocity/raw', dvl_msg, t)
-                    
-                    # Generate and write Depth (/bar30/depth/raw)
-                    depth_msg = Depth()
-                    depth_msg.header = header
-                    depth_msg.time = header.stamp.to_sec()
-                    depth_msg.pressure_abs = 0.0  # Default
-                    depth_msg.pressure_diff = 0.0  # Default
-                    depth_msg.temperature = 0.0  # Default
-                    depth_msg.depth = 0.0  # 2D motion, depth = 0
-                    outbag.write('/bar30/depth/raw', depth_msg, t)
-                    
-                    # Generate and write Imu (/vn100/imu/raw)
-                    imu_msg = Imu()
-                    imu_msg.header = header
-                    
-                    # Orientation: From closest /pose_gt, force roll=0, pitch=0, keep yaw
-                    euler = tf_trans.euler_from_quaternion([
-                        closest_pose_gt.pose.orientation.x,
-                        closest_pose_gt.pose.orientation.y,
-                        closest_pose_gt.pose.orientation.z,
-                        closest_pose_gt.pose.orientation.w
-                    ])
-                    quat = tf_trans.quaternion_from_euler(0.0, 0.0, euler[2])
-                    imu_msg.orientation = Quaternion(x=quat[0], y=quat[1], z=quat[2], w=quat[3])
-                    imu_msg.orientation_covariance = [0.0] * 9  # Default
-                    
-                    # Angular velocity: From /cmd_vel, only z (yaw rate), x/y=0
-                    imu_msg.angular_velocity = Vector3(x=0.0, y=0.0, z=msg.twist.angular.z)
-                    imu_msg.angular_velocity_covariance = [0.0] * 9  # Default
-                    
-                    # Linear acceleration: All 0 (no data)
-                    imu_msg.linear_acceleration = Vector3(x=0.0, y=0.0, z=0.0)
-                    imu_msg.linear_acceleration_covariance = [0.0] * 9  # Default
-                    
-                    outbag.write('/vn100/imu/raw', imu_msg, t)
-            
-            # Update progress bar
-            pbar.update(1)
+                elif topic == '/pose_gt':
+                    outbag.write(topic, msg, t)
 
-print("Processing complete. Output bag saved to: %s" % output_bag_path)
+                pbar.update(1)
 
+    rospy.loginfo("Processing complete. Output bag saved to: %s", OUTPUT_BAG_PATH)
 
+if __name__ == '__main__':
+    main()
