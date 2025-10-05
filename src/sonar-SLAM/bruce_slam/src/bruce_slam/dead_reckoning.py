@@ -71,6 +71,11 @@ class DeadReckoningNode(object):
         self.rov_id = ""
         # 机器人ID，用于多机器人SLAM场景（当前未使用）
 
+        # 初始化 odom 文件句柄，用于存储 evo_traj 格式的轨迹数据
+        self.odom_file_path = "/home/hzr/catkin_ws/src/sonar-SLAM/output/aracati_part1_odom.txt"
+        self.odom_file = open(self.odom_file_path, "w")  # 以写模式打开文件（覆盖现有内容）
+
+
 
     def init_node(self, ns="~")->None:
         """Init the node, fetch all paramaters from ROS
@@ -422,6 +427,18 @@ class DeadReckoningNode(object):
         self.odom_pub.publish(odom_msg)
         # 发布里程计消息
 
+        # 存储 odom 数据到文件（evo_traj 格式: timestamp tx ty tz qx qy qz qw）
+        timestamp = odom_msg.header.stamp.to_sec()
+        tx = odom_msg.pose.pose.position.x
+        ty = odom_msg.pose.pose.position.y
+        tz = odom_msg.pose.pose.position.z
+        qx = odom_msg.pose.pose.orientation.x
+        qy = odom_msg.pose.pose.orientation.y
+        qz = odom_msg.pose.pose.orientation.z
+        qw = odom_msg.pose.pose.orientation.w
+        self.odom_file.write(f"{timestamp:.9f} {tx} {ty} {tz} {qx} {qy} {qz} {qw}\n")
+        self.odom_file.flush()  # 确保数据写入磁盘
+
         p = odom_msg.pose.pose.position
         q = odom_msg.pose.pose.orientation
         self.tf.sendTransform(
@@ -439,3 +456,7 @@ class DeadReckoningNode(object):
             self.traj_pub.publish(traj_msg)
             # 发布轨迹点云消息
             
+    def __del__(self):
+        """Destructor to close the odometry file handle"""
+        if hasattr(self, 'odom_file') and self.odom_file:
+            self.odom_file.close()

@@ -34,6 +34,10 @@ class SLAMNode(SLAM):
         self.lock = threading.RLock()
         self.pub_num,self.slam_callback_num = 0,0
 
+        # 初始化 pose 文件句柄，用于存储 evo_traj 格式的轨迹数据
+        self.pose_file_path = "/home/hzr/catkin_ws/src/sonar-SLAM/output/aracati_part1_pose.txt"
+        self.pose_file = open(self.pose_file_path, "w")  # 以写模式打开文件（覆盖现有内容）
+
     def init_node(self, ns="~")->None:
         """配置 SLAM 节点，加载参数并初始化订阅者和发布者
 
@@ -246,6 +250,18 @@ class SLAMNode(SLAM):
         pose_msg.pose.covariance = cov.ravel().tolist()
         self.pose_pub.publish(pose_msg)  # 发布到 SLAM_POSE_TOPIC
 
+        # 存储 pose 数据到文件（evo_traj 格式: timestamp tx ty tz qx qy qz qw）
+        timestamp = pose_msg.header.stamp.to_sec()
+        tx = pose_msg.pose.pose.position.x
+        ty = pose_msg.pose.pose.position.y
+        tz = pose_msg.pose.pose.position.z
+        qx = pose_msg.pose.pose.orientation.x
+        qy = pose_msg.pose.pose.orientation.y
+        qz = pose_msg.pose.pose.orientation.z
+        qw = pose_msg.pose.pose.orientation.w
+        self.pose_file.write(f"{timestamp:.9f} {tx} {ty} {tz} {qx} {qy} {qz} {qw}\n")
+        self.pose_file.flush()  # 确保数据写入磁盘
+
         # 计算 odom 到 map 的变换
         o2m = self.current_frame.pose3.compose(self.current_frame.dr_pose3.inverse())
         o2m = g2r(o2m)
@@ -361,3 +377,8 @@ class SLAMNode(SLAM):
         else:
             cloud_msg.header.frame_id = self.rov_id + "_map"
         self.cloud_pub.publish(cloud_msg)  # 发布到 SLAM_CLOUD_TOPIC
+
+    def __del__(self):
+        """析构函数，关闭文件句柄"""
+        if hasattr(self, 'pose_file') and self.pose_file:
+            self.pose_file.close()

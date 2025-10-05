@@ -32,8 +32,8 @@ from tqdm import tqdm
 import rospy
 
 # --- 全局配置 ---
-INPUT_BAG_PATH = '/home/hzr/rosbag/aracati.bag'
-OUTPUT_BAG_PATH = '/home/hzr/rosbag/aracati_slam.bag'
+INPUT_BAG_PATH = '/home/hzr/rosbag/ARACATI_2017_8bits_full.bag'
+OUTPUT_BAG_PATH = '/home/hzr/rosbag/ARACATI_2017_8bits_full_slam.bag'
 TIME_SYNC_THRESHOLD = 0.1  # /cmd_vel 和 /pose_gt 之间允许的最大时间差 (秒)
 
 # --- 声呐图像转换函数 (保留原逻辑) ---
