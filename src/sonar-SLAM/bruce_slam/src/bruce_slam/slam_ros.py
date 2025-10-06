@@ -35,7 +35,7 @@ class SLAMNode(SLAM):
         self.pub_num,self.slam_callback_num = 0,0
 
         # 初始化 pose 文件句柄，用于存储 evo_traj 格式的轨迹数据
-        self.pose_file_path = "/home/hzr/catkin_ws/src/sonar-SLAM/output/aracati_part1_pose.txt"
+        self.pose_file_path = "/home/hzr/catkin_ws/src/sonar-SLAM/output/aracati_sonargan_fake_pose.txt"
         self.pose_file = open(self.pose_file_path, "w")  # 以写模式打开文件（覆盖现有内容）
 
     def init_node(self, ns="~")->None:

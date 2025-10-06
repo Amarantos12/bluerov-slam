@@ -6,11 +6,11 @@ from tqdm import tqdm
 import rospy
 
 # 输入和输出 bag 文件路径
-input_bag_path = '/home/hzr/rosbag/ARACATI_2017_8bits_full_slam.bag'
+input_bag_path = '/home/hzr/rosbag/ARACATI_2017_8bits_full_sonargan.bag'
 output_bag_paths = [
-    '/home/hzr/rosbag/ARACATI_2017_8bits_full_slam_part1.bag',
-    '/home/hzr/rosbag/ARACATI_2017_8bits_full_slam_part2.bag',
-    '/home/hzr/rosbag/ARACATI_2017_8bits_full_slam_part3.bag'
+    '/home/hzr/rosbag/ARACATI_2017_8bits_full_sonargan_part1.bag',
+    '/home/hzr/rosbag/ARACATI_2017_8bits_full_sonargan_part2.bag',
+    '/home/hzr/rosbag/ARACATI_2017_8bits_full_sonargan_part3.bag'
 ]
 
 def split_bag_by_time():
