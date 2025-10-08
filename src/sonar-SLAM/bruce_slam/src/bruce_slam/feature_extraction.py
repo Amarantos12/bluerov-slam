@@ -20,6 +20,7 @@ from .utils import *
 from .sonar import *
 
 from bruce_slam.CFAR import CFAR
+from sensor_msgs.msg import CameraInfo
 
 # from bruce_slam.bruce_slam import sonar
 
@@ -129,6 +130,9 @@ class FeatureExtraction(object):
         # 初始化可视化图像发布者
         self.feature_img_pub = rospy.Publisher(
             SONAR_FEATURE_IMG_TOPIC, Image, queue_size=10)  # 发布可视化特征图像
+        
+        self.feature_info_pub = rospy.Publisher(
+            SONAR_FEATURE_IMG_TOPIC + "/camera_info", CameraInfo, queue_size=10)
 
         self.configure()  # 配置CFAR检测器
 
@@ -205,6 +209,7 @@ class FeatureExtraction(object):
             # 发布空点云以保持SLAM同步
             nan = np.array([[np.nan, np.nan]])
             self.publish_features(sonar_msg, nan)
+            print("****** pubinsh nan point ******")
             return
 
         # 解码压缩图像
@@ -226,7 +231,23 @@ class FeatureExtraction(object):
         # 将图像从极坐标转换为笛卡尔坐标并可视化
         vis_img = cv2.remap(img, self.map_x, self.map_y, cv2.INTER_LINEAR)  # 坐标转换
         vis_img = cv2.applyColorMap(vis_img, 2)  # 应用颜色映射
-        self.feature_img_pub.publish(ros_numpy.image.numpy_to_image(vis_img, "bgr8"))  # 发布可视化图像
+
+        # <<< --- CREATE AND PUBLISH CameraInfo MESSAGE --- >>>
+        # 1. Create a CameraInfo message
+        info_msg = CameraInfo()
+        info_msg.header = sonar_msg.header # Use the same timestamp and frame_id
+        info_msg.height = self.rows
+        info_msg.width = self.cols
+        
+        # 2. "Borrow" the distortion parameters array 'D' to store our metadata.
+        #    This is a common trick when you don't want to create a custom message.
+        #    We will store [width_in_meters, height_in_meters]
+        info_msg.D = [self.width, self.height] 
+        
+        # 3. Publish the info message
+        # self.feature_info_pub.publish(info_msg)
+
+        # self.feature_img_pub.publish(ros_numpy.image.numpy_to_image(vis_img, "bgr8"))  # 发布可视化图像
 
         # 将特征点转换为笛卡尔坐标
         peaks = cv2.remap(peaks, self.map_x, self.map_y, cv2.INTER_LINEAR)        
@@ -248,5 +269,12 @@ class FeatureExtraction(object):
                 points, self.outlier_filter_radius, self.outlier_filter_min_points
             )
 
+        # 准备可视化图像消息，并设置 header
+        vis_img_msg = ros_numpy.image.numpy_to_image(vis_img, "bgr8")
+        vis_img_msg.header = sonar_msg.header  # 确保时间戳一致
+
         # 发布特征点云
+        self.feature_info_pub.publish(info_msg)
+        self.feature_img_pub.publish(vis_img_msg)  # 发布可视化图像
         self.publish_features(sonar_msg, points)
+        # print("****** pub point ******")

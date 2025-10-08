@@ -61,8 +61,8 @@ CMakeFiles/rti_dvl_generate_messages_py: /home/hzr/catkin_ws/devel/.private/rti_
 
 /home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_DVL.py: /opt/ros/noetic/lib/genpy/genmsg_py.py
 /home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_DVL.py: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_DVL.py: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_DVL.py: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_DVL.py: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/rti_dvl/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Python from MSG rti_dvl/DVL"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg -Irti_dvl:/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p rti_dvl -o /home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg
 
@@ -73,9 +73,9 @@ CMakeFiles/rti_dvl_generate_messages_py: /home/hzr/catkin_ws/devel/.private/rti_
 
 /home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_BottomTrack.py: /opt/ros/noetic/lib/genpy/genmsg_py.py
 /home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_BottomTrack.py: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_BottomTrack.py: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_BottomTrack.py: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_BottomTrack.py: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_BottomTrack.py: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg/_BottomTrack.py: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/rti_dvl/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Python from MSG rti_dvl/BottomTrack"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg -Irti_dvl:/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p rti_dvl -o /home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages/rti_dvl/msg
 

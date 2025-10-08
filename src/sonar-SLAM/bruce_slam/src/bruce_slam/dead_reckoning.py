@@ -72,7 +72,7 @@ class DeadReckoningNode(object):
         # 机器人ID，用于多机器人SLAM场景（当前未使用）
 
         # 初始化 odom 文件句柄，用于存储 evo_traj 格式的轨迹数据
-        self.odom_file_path = "/home/hzr/catkin_ws/src/sonar-SLAM/output/aracati_sonargan_fake_odom.txt"
+        self.odom_file_path = "/home/hzr/catkin_ws/src/sonar-SLAM/output/aracati_sonargan_odom.txt"
         self.odom_file = open(self.odom_file_path, "w")  # 以写模式打开文件（覆盖现有内容）
 
 

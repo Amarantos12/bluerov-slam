@@ -29,7 +29,7 @@ add_custom_target(_sonar_oculus_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg" NAME_WE)
 add_custom_target(_sonar_oculus_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "sonar_oculus" "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg" "sensor_msgs/Image:sonar_oculus/OculusFire:std_msgs/Header"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "sonar_oculus" "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg" "sonar_oculus/OculusFire:std_msgs/Header:sensor_msgs/Image"
 )
 
 #
@@ -53,7 +53,7 @@ _generate_msg_cpp(sonar_oculus
 _generate_msg_cpp(sonar_oculus
   "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg;/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/sonar_oculus
 )
 
@@ -102,7 +102,7 @@ _generate_msg_eus(sonar_oculus
 _generate_msg_eus(sonar_oculus
   "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg;/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/sonar_oculus
 )
 
@@ -151,7 +151,7 @@ _generate_msg_lisp(sonar_oculus
 _generate_msg_lisp(sonar_oculus
   "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg;/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/sonar_oculus
 )
 
@@ -200,7 +200,7 @@ _generate_msg_nodejs(sonar_oculus
 _generate_msg_nodejs(sonar_oculus
   "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg;/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/sonar_oculus
 )
 
@@ -249,7 +249,7 @@ _generate_msg_py(sonar_oculus
 _generate_msg_py(sonar_oculus
   "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg;/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/sensor_msgs/cmake/../msg/Image.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/sonar_oculus
 )
 

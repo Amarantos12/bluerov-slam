@@ -1,6 +1,0 @@
-Symlinking /home/hzr/catkin_ws/devel/lib/pkgconfig/bruce_slam.pc
-Symlinking /home/hzr/catkin_ws/devel/lib/python3/dist-packages/bruce_slam/pcl.cpython-38-x86_64-linux-gnu.so
-Symlinking /home/hzr/catkin_ws/devel/lib/python3/dist-packages/bruce_slam/cfar.cpython-38-x86_64-linux-gnu.so
-Symlinking /home/hzr/catkin_ws/devel/lib/python3/dist-packages/bruce_slam/__init__.py
-Symlinking /home/hzr/catkin_ws/devel/share/bruce_slam/cmake/bruce_slamConfig.cmake
-Symlinking /home/hzr/catkin_ws/devel/share/bruce_slam/cmake/bruce_slamConfig-version.cmake

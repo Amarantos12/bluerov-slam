@@ -1,6 +1,0 @@
-[ 25%] [32mBuilding CXX object CMakeFiles/cfar.dir/src/bruce_slam/cpp/cfar.cpp.o[0m
-[ 50%] [32mBuilding CXX object CMakeFiles/pcl.dir/src/bruce_slam/cpp/pcl.cpp.o[0m
-[ 75%] [32m[1mLinking CXX shared module /home/hzr/catkin_ws/devel/.private/bruce_slam/lib/python3/dist-packages/bruce_slam/cfar.cpython-38-x86_64-linux-gnu.so[0m
-[ 75%] Built target cfar
-[100%] [32m[1mLinking CXX shared module /home/hzr/catkin_ws/devel/.private/bruce_slam/lib/python3/dist-packages/bruce_slam/pcl.cpython-38-x86_64-linux-gnu.so[0m
-[100%] Built target pcl

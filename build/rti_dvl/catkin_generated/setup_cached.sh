@@ -8,9 +8,6 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/hzr/catkin_ws/devel/.private/rti_dvl:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/hzr/catkin_ws/devel/.private/rti_dvl/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="/home/hzr/catkin_ws/devel/.private/rti_dvl/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/hzr/catkin_ws/build/rti_dvl'
-export PYTHONPATH="/home/hzr/catkin_ws/devel/.private/rti_dvl/lib/python3/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/hzr/catkin_ws/devel/.private/rti_dvl/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/hzr/catkin_ws/src/Argonaut/rti_dvl:$ROS_PACKAGE_PATH"

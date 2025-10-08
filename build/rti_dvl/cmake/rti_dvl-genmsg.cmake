@@ -19,7 +19,7 @@ add_custom_target(rti_dvl_generate_messages ALL)
 
 get_filename_component(_filename "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg" NAME_WE)
 add_custom_target(_rti_dvl_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rti_dvl" "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg" "geometry_msgs/Vector3:std_msgs/Header"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rti_dvl" "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg" "std_msgs/Header:geometry_msgs/Vector3"
 )
 
 get_filename_component(_filename "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg" NAME_WE)
@@ -29,7 +29,7 @@ add_custom_target(_rti_dvl_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg" NAME_WE)
 add_custom_target(_rti_dvl_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rti_dvl" "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg" "geometry_msgs/Vector3:std_msgs/Header:rti_dvl/Command"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rti_dvl" "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg" "rti_dvl/Command:std_msgs/Header:geometry_msgs/Vector3"
 )
 
 #
@@ -41,7 +41,7 @@ add_custom_target(_rti_dvl_generate_messages_check_deps_${_filename}
 _generate_msg_cpp(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rti_dvl
 )
 _generate_msg_cpp(rti_dvl
@@ -53,7 +53,7 @@ _generate_msg_cpp(rti_dvl
 _generate_msg_cpp(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rti_dvl
 )
 
@@ -90,7 +90,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rti_dvl_generate_messages_cpp)
 _generate_msg_eus(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/rti_dvl
 )
 _generate_msg_eus(rti_dvl
@@ -102,7 +102,7 @@ _generate_msg_eus(rti_dvl
 _generate_msg_eus(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/rti_dvl
 )
 
@@ -139,7 +139,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rti_dvl_generate_messages_eus)
 _generate_msg_lisp(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rti_dvl
 )
 _generate_msg_lisp(rti_dvl
@@ -151,7 +151,7 @@ _generate_msg_lisp(rti_dvl
 _generate_msg_lisp(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rti_dvl
 )
 
@@ -188,7 +188,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rti_dvl_generate_messages_lisp)
 _generate_msg_nodejs(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/rti_dvl
 )
 _generate_msg_nodejs(rti_dvl
@@ -200,7 +200,7 @@ _generate_msg_nodejs(rti_dvl
 _generate_msg_nodejs(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/rti_dvl
 )
 
@@ -237,7 +237,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rti_dvl_generate_messages_nodejs)
 _generate_msg_py(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rti_dvl
 )
 _generate_msg_py(rti_dvl
@@ -249,7 +249,7 @@ _generate_msg_py(rti_dvl
 _generate_msg_py(rti_dvl
   "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg"
+  "/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rti_dvl
 )
 

@@ -60,8 +60,8 @@ CMakeFiles/rti_dvl_generate_messages_nodejs: /home/hzr/catkin_ws/devel/.private/
 
 /home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/DVL.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
 /home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/DVL.js: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/DVL.js: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/DVL.js: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/DVL.js: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/rti_dvl/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Javascript code from rti_dvl/DVL.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg -Irti_dvl:/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p rti_dvl -o /home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg
 
@@ -72,9 +72,9 @@ CMakeFiles/rti_dvl_generate_messages_nodejs: /home/hzr/catkin_ws/devel/.private/
 
 /home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/BottomTrack.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
 /home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/BottomTrack.js: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/BottomTrack.js: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/BottomTrack.js: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/BottomTrack.js: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/BottomTrack.js: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg/BottomTrack.js: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/rti_dvl/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Javascript code from rti_dvl/BottomTrack.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg -Irti_dvl:/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p rti_dvl -o /home/hzr/catkin_ws/devel/.private/rti_dvl/share/gennodejs/ros/rti_dvl/msg
 

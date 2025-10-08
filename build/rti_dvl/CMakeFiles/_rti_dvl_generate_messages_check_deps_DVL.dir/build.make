@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/hzr/catkin_ws/build/rti_dvl
 include CMakeFiles/_rti_dvl_generate_messages_check_deps_DVL.dir/progress.make
 
 CMakeFiles/_rti_dvl_generate_messages_check_deps_DVL:
-	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py rti_dvl /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg geometry_msgs/Vector3:std_msgs/Header
+	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py rti_dvl /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg std_msgs/Header:geometry_msgs/Vector3
 
 _rti_dvl_generate_messages_check_deps_DVL: CMakeFiles/_rti_dvl_generate_messages_check_deps_DVL
 _rti_dvl_generate_messages_check_deps_DVL: CMakeFiles/_rti_dvl_generate_messages_check_deps_DVL.dir/build.make

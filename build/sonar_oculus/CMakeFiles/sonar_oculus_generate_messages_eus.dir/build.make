@@ -75,9 +75,9 @@ CMakeFiles/sonar_oculus_generate_messages_eus: /home/hzr/catkin_ws/devel/.privat
 
 /home/hzr/catkin_ws/devel/.private/sonar_oculus/share/roseus/ros/sonar_oculus/msg/OculusPingUncompressed.l: /opt/ros/noetic/lib/geneus/gen_eus.py
 /home/hzr/catkin_ws/devel/.private/sonar_oculus/share/roseus/ros/sonar_oculus/msg/OculusPingUncompressed.l: /home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg
-/home/hzr/catkin_ws/devel/.private/sonar_oculus/share/roseus/ros/sonar_oculus/msg/OculusPingUncompressed.l: /opt/ros/noetic/share/sensor_msgs/msg/Image.msg
 /home/hzr/catkin_ws/devel/.private/sonar_oculus/share/roseus/ros/sonar_oculus/msg/OculusPingUncompressed.l: /home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusFire.msg
 /home/hzr/catkin_ws/devel/.private/sonar_oculus/share/roseus/ros/sonar_oculus/msg/OculusPingUncompressed.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/hzr/catkin_ws/devel/.private/sonar_oculus/share/roseus/ros/sonar_oculus/msg/OculusPingUncompressed.l: /opt/ros/noetic/share/sensor_msgs/msg/Image.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/sonar_oculus/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating EusLisp code from sonar_oculus/OculusPingUncompressed.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg/OculusPingUncompressed.msg -Isonar_oculus:/home/hzr/catkin_ws/src/Argonaut/sonar_oculus/msg -Isensor_msgs:/opt/ros/noetic/share/sensor_msgs/cmake/../msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p sonar_oculus -o /home/hzr/catkin_ws/devel/.private/sonar_oculus/share/roseus/ros/sonar_oculus/msg
 

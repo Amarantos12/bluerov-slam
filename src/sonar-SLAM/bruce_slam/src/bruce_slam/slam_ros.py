@@ -7,10 +7,11 @@ import rospy
 import cv_bridge
 from nav_msgs.msg import Odometry
 from message_filters import Subscriber
-from sensor_msgs.msg import PointCloud2
+from sensor_msgs.msg import PointCloud2, Image, CameraInfo
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from message_filters import ApproximateTimeSynchronizer
+import message_filters
 
 # Bruce 模块导入
 from bruce_slam.utils.io import *
@@ -35,7 +36,7 @@ class SLAMNode(SLAM):
         self.pub_num,self.slam_callback_num = 0,0
 
         # 初始化 pose 文件句柄，用于存储 evo_traj 格式的轨迹数据
-        self.pose_file_path = "/home/hzr/catkin_ws/src/sonar-SLAM/output/aracati_sonargan_fake_pose.txt"
+        self.pose_file_path = "/home/hzr/catkin_ws/src/sonar-SLAM/output/aracati_sonargan_pose.txt"
         self.pose_file = open(self.pose_file_path, "w")  # 以写模式打开文件（覆盖现有内容）
 
     def init_node(self, ns="~")->None:
@@ -93,11 +94,26 @@ class SLAMNode(SLAM):
         # 定义订阅话题
         self.feature_sub = Subscriber(SONAR_FEATURE_TOPIC, PointCloud2)  # 声呐点云话题
         self.odom_sub = Subscriber(LOCALIZATION_ODOM_TOPIC, Odometry)  # 里程计话题
+        self.image_sub = message_filters.Subscriber(SONAR_FEATURE_IMG_TOPIC, Image)
+        self.info_sub = message_filters.Subscriber(SONAR_FEATURE_IMG_TOPIC + "/camera_info", CameraInfo)
+
+        # 添加调试回调以记录每个话题的时间戳
+        # self.feature_sub.registerCallback(lambda msg: rospy.loginfo(f"Feature stamp: {msg.header.stamp.to_sec()}"))
+        # self.odom_sub.registerCallback(lambda msg: rospy.loginfo(f"Odom stamp: {msg.header.stamp.to_sec()}"))
+        # self.image_sub.registerCallback(lambda msg: rospy.loginfo(f"Image stamp: {msg.header.stamp.to_sec()}"))
+        # self.info_sub.registerCallback(lambda msg: rospy.loginfo(f"Info stamp: {msg.header.stamp.to_sec()}"))
 
         # 定义时间同步策略
-        self.time_sync = ApproximateTimeSynchronizer(
-            [self.feature_sub, self.odom_sub], 200, 
-            self.feature_odom_sync_max_delay, allow_headerless=False)  # 同步点云和里程计
+        # self.time_sync = ApproximateTimeSynchronizer(
+        #     [self.feature_sub, self.odom_sub], 200, 
+        #     self.feature_odom_sync_max_delay, allow_headerless=False)  # 同步点云和里程计
+
+        self.time_sync = message_filters.ApproximateTimeSynchronizer(
+            [self.feature_sub, self.odom_sub, self.image_sub, self.info_sub],
+            500, 
+            self.feature_odom_sync_max_delay, 
+            allow_headerless=False
+        )
 
         # 注册同步回调函数
         self.time_sync.registerCallback(self.SLAM_callback)
@@ -151,7 +167,8 @@ class SLAMNode(SLAM):
         self.sonar_sub.unregister()  # 配置后取消订阅
 
     @add_lock
-    def SLAM_callback(self, feature_msg:PointCloud2, odom_msg:Odometry)->None:
+    def SLAM_callback(self, feature_msg:PointCloud2, odom_msg:Odometry, image_msg:Image, info_msg:CameraInfo)->None:
+    # def SLAM_callback(self, feature_msg:PointCloud2, odom_msg:Odometry)->None:
         """SLAM 回调函数，订阅声呐点云和里程计消息，
         处理整个 SLAM 系统并发布地图、位姿和约束。
 
@@ -171,8 +188,26 @@ class SLAMNode(SLAM):
         # 从里程计消息获取死 reckoning 位姿，转换为 GTSAM 格式
         dr_pose3 = r2g(odom_msg.pose.pose)
 
+        try:
+            cartesian_image = self.CVbridge.imgmsg_to_cv2(image_msg, "bgr8")
+        except cv_bridge.CvBridgeError as e:
+            rospy.logerr(f"CV Bridge error: {e}")
+            self.lock.release()
+            return
+
+        width_m = info_msg.D[0]   # Read width_m from the first element of D
+        height_m = info_msg.D[1]  # Read height_m from the second element of D
+        
+        image_params = {
+            'width_m': width_m,
+            'height_m': height_m,
+            'cols': cartesian_image.shape[1], # or info_msg.width
+            'rows': cartesian_image.shape[0]  # or info_msg.height
+        }
         # 初始化新的关键帧
-        frame = Keyframe(False, time, dr_pose3)
+        # frame = Keyframe(False, time, dr_pose3)
+        frame = Keyframe(False, time, dr_pose3, image_params=image_params)
+        frame.image = cartesian_image
 
         # 将点云消息转换为 2D numpy 数组
         points = ros_numpy.point_cloud2.pointcloud2_to_xyz_array(feature_msg)
@@ -195,17 +230,22 @@ class SLAMNode(SLAM):
 
         # 检查关键帧状态，是否需要添加关键帧（基于死 reckoning 的移动距离）
         if frame.status:
+            print("if frame.status")
             # 添加点云到关键帧
             frame.points = points
 
             # 执行序列扫描匹配
             if not self.keyframes:
                 self.add_prior(frame)  # 第一个关键帧添加先验
+                print("if not self.keyframes")
+                self.update_factor_graph(frame)  # 先更新因子图
             else:
-                self.add_sequential_scan_matching(frame)  # 添加序列扫描匹配
+                # print("*****************")
+                ssm_result = self.add_sequential_scan_matching(frame)  # 添加序列扫描匹配
+                self.update_factor_graph(frame)  # 先更新因子图
 
             # 更新因子图
-            self.update_factor_graph(frame)
+            # self.update_factor_graph(frame)
 
             # 如果启用闭环检测且检测到闭环，重新更新因子图
             if self.nssm_params.enable and self.add_nonsequential_scan_matching():

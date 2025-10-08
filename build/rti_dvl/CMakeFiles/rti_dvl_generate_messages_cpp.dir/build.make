@@ -60,8 +60,8 @@ CMakeFiles/rti_dvl_generate_messages_cpp: /home/hzr/catkin_ws/devel/.private/rti
 
 /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/DVL.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/DVL.h: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/DVL.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/DVL.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/DVL.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/DVL.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/rti_dvl/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating C++ code from rti_dvl/DVL.msg"
 	cd /home/hzr/catkin_ws/src/Argonaut/rti_dvl && /home/hzr/catkin_ws/build/rti_dvl/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/DVL.msg -Irti_dvl:/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p rti_dvl -o /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl -e /opt/ros/noetic/share/gencpp/cmake/..
@@ -74,9 +74,9 @@ CMakeFiles/rti_dvl_generate_messages_cpp: /home/hzr/catkin_ws/devel/.private/rti
 
 /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/BottomTrack.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/BottomTrack.h: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/BottomTrack.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
-/home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/BottomTrack.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/BottomTrack.h: /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/Command.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/BottomTrack.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/BottomTrack.h: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl/BottomTrack.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/rti_dvl/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating C++ code from rti_dvl/BottomTrack.msg"
 	cd /home/hzr/catkin_ws/src/Argonaut/rti_dvl && /home/hzr/catkin_ws/build/rti_dvl/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg/BottomTrack.msg -Irti_dvl:/home/hzr/catkin_ws/src/Argonaut/rti_dvl/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p rti_dvl -o /home/hzr/catkin_ws/devel/.private/rti_dvl/include/rti_dvl -e /opt/ros/noetic/share/gencpp/cmake/..

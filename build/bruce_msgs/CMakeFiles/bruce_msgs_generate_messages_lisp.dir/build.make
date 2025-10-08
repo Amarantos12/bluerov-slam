@@ -67,34 +67,34 @@ CMakeFiles/bruce_msgs_generate_messages_lisp: /home/hzr/catkin_ws/devel/.private
 
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/srv/QueryExplorationPath.srv
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/nav_msgs/msg/Path.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/QueryExplorationPath.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/bruce_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Lisp code from bruce_msgs/QueryExplorationPath.srv"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/srv/QueryExplorationPath.srv -Ibruce_msgs:/home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Isensor_msgs:/opt/ros/noetic/share/sensor_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p bruce_msgs -o /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv
 
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/srv/PredictSLAMUpdate.srv
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/msg/ISAM2Update.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/nav_msgs/msg/Path.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/geometry_msgs/msg/PoseStamped.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/msg/ISAM2Update.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/nav_msgs/msg/Path.msg
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/PredictSLAMUpdate.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/bruce_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Lisp code from bruce_msgs/PredictSLAMUpdate.srv"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/srv/PredictSLAMUpdate.srv -Ibruce_msgs:/home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Isensor_msgs:/opt/ros/noetic/share/sensor_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p bruce_msgs -o /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv
 
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/srv/GetOccupancyMap.srv
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/nav_msgs/msg/OccupancyGrid.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/nav_msgs/msg/MapMetaData.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
+/home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/nav_msgs/msg/OccupancyGrid.msg
 /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv/GetOccupancyMap.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/hzr/catkin_ws/build/bruce_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating Lisp code from bruce_msgs/GetOccupancyMap.srv"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/srv/GetOccupancyMap.srv -Ibruce_msgs:/home/hzr/catkin_ws/src/sonar-SLAM/bruce_msgs/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Isensor_msgs:/opt/ros/noetic/share/sensor_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p bruce_msgs -o /home/hzr/catkin_ws/devel/.private/bruce_msgs/share/common-lisp/ros/bruce_msgs/srv

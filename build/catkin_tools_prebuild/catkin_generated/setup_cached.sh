@@ -8,7 +8,10 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/hzr/catkin_ws/devel/.private/catkin_tools_prebuild:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH='/opt/ros/noetic/lib'
 export PATH='/opt/ros/noetic/bin:/home/hzr/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/hzr/.local/bin'
+export PKG_CONFIG_PATH='/opt/ros/noetic/lib/pkgconfig'
 export PWD='/home/hzr/catkin_ws/build/catkin_tools_prebuild'
-export ROSLISP_PACKAGE_DIRECTORIES='/home/hzr/catkin_ws/devel/.private/catkin_tools_prebuild/share/common-lisp'
+export PYTHONPATH='/opt/ros/noetic/lib/python3/dist-packages'
+export ROSLISP_PACKAGE_DIRECTORIES="/home/hzr/catkin_ws/devel/.private/catkin_tools_prebuild/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/hzr/catkin_ws/build/catkin_tools_prebuild:$ROS_PACKAGE_PATH"

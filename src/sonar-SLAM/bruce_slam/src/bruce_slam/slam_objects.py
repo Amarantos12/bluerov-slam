@@ -71,7 +71,8 @@ class Keyframe(object):
         between_pose=None, 
         index=None, 
         vin=None, 
-        index_kf=None
+        index_kf=None,
+        image_params=None
     ):
         """Class constructor for a keyframe
 
@@ -112,6 +113,7 @@ class Keyframe(object):
         self.twist = None  # twist message for publishing odom
 
         self.image = None  # image with this keyframe
+        self.image_params = image_params
         self.vertical_images = []
         self.horizontal_images = []
 

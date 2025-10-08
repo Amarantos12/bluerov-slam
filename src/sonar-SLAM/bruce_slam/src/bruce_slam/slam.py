@@ -15,6 +15,7 @@ from .utils.conversions import *
 from .utils.visualization import *
 from .utils.io import *
 from . import pcl
+from .slam_objects import Keyframe, ICPResult, InitializationResult
 
 from bruce_slam.slam_objects import (
     STATUS,
@@ -23,6 +24,13 @@ from bruce_slam.slam_objects import (
     ICPResult,
     SMParams,
 )
+
+import cv2
+from sensor_msgs.msg import Image  # ROS Image 消息
+from cv_bridge import CvBridge  # CV桥
+import os
+
+from scipy.spatial import KDTree
 
 
 class SLAM(object):
@@ -71,6 +79,7 @@ class SLAM(object):
 
         # Noise radius in overlap estimation
         self.point_noise = 0.5
+        # self.point_noise = 5
 
         # paramters for sequnetial scan matching (SSM)
         self.ssm_params = SMParams()  # object to hold all the params
@@ -413,6 +422,10 @@ class SLAM(object):
         if target_pose:
             target_points = Keyframe.transform_points(target_points, target_pose)
 
+        print("\n--- INSIDE get_overlap ---")
+        print(f"  Matching {len(source_points)} source points against {len(target_points)} target points.")
+        print(f"  Using point_noise (distance threshold): {self.point_noise}")
+
         # match the points using nearest neigbor with PCL
         # note that un-matched points get a -1 in indices
         indices, dists = pcl.match(target_points, source_points, 1, self.point_noise)
@@ -715,6 +728,147 @@ class SLAM(object):
 
         return ret
 
+    # def add_sequential_scan_matching(self, keyframe: Keyframe) -> None:
+    #     """Add the sequential scan matching factor to the graph. Here we use the global ICP as an inital
+    #     guess for standard ICP. We then perform some simple checks to catch silly outliers. If those
+    #     checks pass we add the ICP result to the pose graph.
+
+    #     Args:
+    #         keyframe (Keyframe): The keyframe we are evaluating, this contains all the relevant info.
+    #     """
+        
+    #     print("*** Strat add_sequential_scan_matching ***")
+    #     print(f"Current keyframe index: {self.current_key}")
+    #     print(f"Number of keyframes: {len(self.keyframes)}")
+
+    #     # call the global-ICP
+    #     ret = self.initialize_sequential_scan_matching(keyframe)
+    #     print(f"Global ICP result: status={ret.status}, description={ret.status.description}")
+    #     print(f"Global ICP keys: source_key={ret.source_key}, target_key={ret.target_key}")
+
+    #     # TODO remove this
+    #     if self.save_fig:
+    #         ret.plot("step-{}-ssm-sampling.png".format(self.current_key))
+
+    #     # check the status of the global-ICP call, if the result is a failure.
+    #     # simply add the odometry factor and return
+    #     if not ret.status:
+    #         self.add_odometry(keyframe)
+    #         print("In add_sequential_scan_matching, not ret.status")
+    #         return
+
+    #     # copy the global-ICP into an ICPResult
+    #     ret2 = ICPResult(ret, self.ssm_params.cov_samples > 0)
+    #     print(f"ICPResult initialized: source_key={ret2.source_key}, target_key={ret2.target_key}")
+
+    #     # Compute ICP here with a timer
+    #     with CodeTimer("SLAM - sequential scan matching - ICP"):
+
+    #         # if possible compute ICP with covariance estimation
+    #         if self.ssm_params.initialization and self.ssm_params.cov_samples > 0:
+    #             message, odom, cov, sample_transforms = self.compute_icp_with_cov(
+    #                 ret2.source_points,
+    #                 ret2.target_points,
+    #                 ret2.initial_transforms[: self.ssm_params.cov_samples],
+    #             )
+
+    #             # if ICP fails, push that into the ret2 object
+    #             if message != "success":
+    #                 ret2.status = STATUS.NOT_CONVERGED
+    #                 ret2.status.description = message
+    #             # Else push the ICP info into ret2
+    #             else:
+    #                 ret2.estimated_transform = odom
+    #                 ret2.cov = cov
+    #                 ret2.sample_transforms = sample_transforms
+    #                 ret2.status.description = "{} samples".format(
+    #                     len(ret2.sample_transforms)
+    #                 )
+
+    #         # Else call standard ICP
+    #         else:
+    #             message, odom = self.compute_icp(
+    #                 ret2.source_points, ret2.target_points, ret2.initial_transform
+    #             )
+
+    #             # check for failure
+    #             if message != "success":
+    #                 ret2.status = STATUS.NOT_CONVERGED
+    #                 ret2.status.description = message
+    #             else:
+    #                 ret2.estimated_transform = odom
+    #                 ret2.status.description = ""
+
+    #     # 无论 ICP 是否成功，都进行可视化
+    #     print(f"Calling visualize_scan_matching with ret2: status={ret2.status}, description={ret2.status.description}")
+    #     self.visualize_scan_matching(ret2, keyframe, title=f"SSM_ICP")
+
+    #     # The transformation compared to dead reckoning can't be too large
+    #     if ret2.status:
+    #         delta = ret2.initial_transform.between(ret2.estimated_transform)
+    #         delta_translation = np.linalg.norm(delta.translation())
+    #         delta_rotation = abs(delta.theta())
+    #         if (
+    #             delta_translation > self.ssm_params.max_translation
+    #             or delta_rotation > self.ssm_params.max_rotation
+    #         ):
+    #             ret2.status = STATUS.LARGE_TRANSFORMATION
+    #             ret2.status.description = "trans {:.2f} rot {:.2f}".format(
+    #                 delta_translation, delta_rotation
+    #             )
+
+    #     # There must be enough overlap between two point clouds.
+    #     if ret2.status:
+    #         overlap = self.get_overlap(
+    #             ret2.source_points, ret2.target_points, ret2.estimated_transform
+    #         )
+
+    #         print(f"--- ICP Overlap Check: Found {overlap} matching points (minimum required: {self.ssm_params.min_points}) ---")
+
+    #         if overlap < self.ssm_params.min_points:
+    #             ret2.status = STATUS.NOT_ENOUGH_OVERLAP
+    #         ret2.status.description = "overlap {}".format(overlap)
+
+    #     if ret2.status:
+    #         print("visualize ret2")
+    #         self.visualize_scan_matching(ret2, keyframe)
+
+    #         # if we used ICP with covariance then we don't need a boilerplate noise model
+    #         # 如果使用了带协方差的ICP，则不需要标准噪声模型
+    #         if ret2.cov is not None:
+    #             icp_odom_model = self.create_full_noise_model(ret2.cov)
+    #         else:
+    #             icp_odom_model = self.icp_odom_model
+
+    #         # package a factor to be added to the graph
+    #         factor = gtsam.BetweenFactorPose2(
+    #             X(ret2.target_key),
+    #             X(ret2.source_key),
+    #             ret2.estimated_transform,
+    #             icp_odom_model,
+    #         )
+
+    #         # Add the factor and the initial guess for this new pose
+    #         self.graph.add(factor)
+    #         self.values.insert(
+    #             X(ret2.source_key), ret2.target_pose.compose(ret2.estimated_transform)
+    #         )
+    #         ret2.inserted = True  # log as added
+
+    #         # TODO remove
+    #         if self.save_data:
+    #             ret2.save("step-{}-ssm-icp.npz".format(self.current_key))
+
+    #     # If ICP was a failure, then just push in the dead reckoning info
+    #     else:
+    #         self.add_odometry(keyframe)
+
+    #     # TODO remove
+    #     if self.save_fig:
+    #         ret2.plot("step-{}-ssm-icp.png".format(self.current_key))
+        
+    #     return ret2
+
     def add_sequential_scan_matching(self, keyframe: Keyframe) -> None:
         """Add the sequential scan matching factor to the graph. Here we use the global ICP as an inital
         guess for standard ICP. We then perform some simple checks to catch silly outliers. If those
@@ -723,13 +877,28 @@ class SLAM(object):
         Args:
             keyframe (Keyframe): The keyframe we are evaluating, this contains all the relevant info.
         """
+        
+        print(f"\n*** Start add_sequential_scan_matching for keyframe {self.current_key} ***")
+
+        # <<< MODIFICATION 1: VISUALIZE FEATURES BEFORE MATCHING >>>
+        #的可视化函数在匹配之前，先看看输入的两个关键帧的点云是什么样的。
+        try:
+            # 获取上一个关键帧作为目标
+            target_keyframe = self.keyframes[self.current_key - 1]
+            
+            # 为关键帧对象动态添加 key 属性，方便在图像上显示正确的帧号
+            target_keyframe.key = self.current_key - 1
+            keyframe.key = self.current_key
+            
+            # 调用可视化函数，它会将对比图保存到文件
+            self.visualize_feature_comparison(target_keyframe, keyframe)
+        except (IndexError, AttributeError) as e:
+            print(f"[WARNING] Could not visualize keyframes for comparison: {e}")
+        # <<< END OF MODIFICATION 1 >>>
+
 
         # call the global-ICP
         ret = self.initialize_sequential_scan_matching(keyframe)
-
-        # TODO remove this
-        if self.save_fig:
-            ret.plot("step-{}-ssm-sampling.png".format(self.current_key))
 
         # check the status of the global-ICP call, if the result is a failure.
         # simply add the odometry factor and return
@@ -742,7 +911,6 @@ class SLAM(object):
 
         # Compute ICP here with a timer
         with CodeTimer("SLAM - sequential scan matching - ICP"):
-
             # if possible compute ICP with covariance estimation
             if self.ssm_params.initialization and self.ssm_params.cov_samples > 0:
                 message, odom, cov, sample_transforms = self.compute_icp_with_cov(
@@ -750,33 +918,23 @@ class SLAM(object):
                     ret2.target_points,
                     ret2.initial_transforms[: self.ssm_params.cov_samples],
                 )
-
-                # if ICP fails, push that into the ret2 object
                 if message != "success":
                     ret2.status = STATUS.NOT_CONVERGED
                     ret2.status.description = message
-                # Else push the ICP info into ret2
                 else:
                     ret2.estimated_transform = odom
                     ret2.cov = cov
                     ret2.sample_transforms = sample_transforms
-                    ret2.status.description = "{} samples".format(
-                        len(ret2.sample_transforms)
-                    )
-
             # Else call standard ICP
             else:
                 message, odom = self.compute_icp(
                     ret2.source_points, ret2.target_points, ret2.initial_transform
                 )
-
-                # check for failure
                 if message != "success":
                     ret2.status = STATUS.NOT_CONVERGED
                     ret2.status.description = message
                 else:
                     ret2.estimated_transform = odom
-                    ret2.status.description = ""
 
         # The transformation compared to dead reckoning can't be too large
         if ret2.status:
@@ -794,16 +952,37 @@ class SLAM(object):
 
         # There must be enough overlap between two point clouds.
         if ret2.status:
+            # print(f"****ret2.estimated_transform: {ret2.estimated_transform}")
             overlap = self.get_overlap(
                 ret2.source_points, ret2.target_points, ret2.estimated_transform
             )
+
+            # <<< MODIFICATION 2: PRINT THE OVERLAP RESULT >>>
+            print(f"Overlap check result: {overlap} points matched (minimum required: {self.ssm_params.min_points}).")
+            # <<< END OF MODIFICATION 2 >>>
+
             if overlap < self.ssm_params.min_points:
                 ret2.status = STATUS.NOT_ENOUGH_OVERLAP
-            ret2.status.description = "overlap {}".format(overlap)
+                ret2.status.description = "overlap {}".format(overlap) # Keep original description for consistency
+            else:
+                ret2.status.description = f"overlap {overlap}"
 
         if ret2.status:
+            print("-> ICP result PASSED all checks. Adding factor to graph.")
+
+            try:
+                self.visualize_scan_matching(
+                    original_source_points=ret2.source_points,
+                    original_target_points=ret2.target_points,
+                    estimated_transform=ret2.estimated_transform,
+                    source_kf=keyframe,
+                    target_kf=target_keyframe
+                )
+            except Exception as e:
+                print(f"[WARNING] Failed to generate match visualization: {e}")
 
             # if we used ICP with covariance then we don't need a boilerplate noise model
+            # print(f"****ret2.estimated_transform: {ret2.estimated_transform}")
             if ret2.cov is not None:
                 icp_odom_model = self.create_full_noise_model(ret2.cov)
             else:
@@ -822,19 +1001,11 @@ class SLAM(object):
             self.values.insert(
                 X(ret2.source_key), ret2.target_pose.compose(ret2.estimated_transform)
             )
-            ret2.inserted = True  # log as added
-
-            # TODO remove
-            if self.save_data:
-                ret2.save("step-{}-ssm-icp.npz".format(self.current_key))
-
-        # If ICP was a failure, then just push in the dead reckoning info
+            ret2.inserted = True
         else:
+            # If ICP was a failure for any reason, then just push in the dead reckoning info
+            print(f"-> ICP result FAILED checks (Status: {ret2.status}). Adding odometry factor instead.")
             self.add_odometry(keyframe)
-
-        # TODO remove
-        if self.save_fig:
-            ret2.plot("step-{}-ssm-icp.png".format(self.current_key))
 
     def initialize_nonsequential_scan_matching(self) -> InitializationResult:
         """Initialize a nonsequential scan matching call. Here we use global ICP to check for loop closures with the
@@ -1109,7 +1280,7 @@ class SLAM(object):
 
                 # check if the loop has been added to the graph
                 if not ret2.inserted:
-
+                    self.visualize_scan_matching(ret2, title=f"Loop Closure Accepted: {ret2.target_key} <-> {ret2.source_key}")
                     # get a noise model
                     if ret2.cov is not None:
                         icp_odom_model = self.create_full_noise_model(ret2.cov)
@@ -1128,7 +1299,7 @@ class SLAM(object):
                         (ret2.target_key, ret2.estimated_transform)
                     )
                     ret2.inserted = True  # update the status of this loop closure, don't add a loop twice
-
+                    self.visualize_scan_matching(ret2, title=f"Loop Closure: {ret2.target_key} <-> {ret2.source_key}")
         return ret2
 
     def is_keyframe(self, frame: Keyframe) -> bool:
@@ -1150,6 +1321,8 @@ class SLAM(object):
         duration = frame.time - self.current_keyframe.time
         if duration < self.keyframe_duration:
             return False
+        elif duration > 2 * self.keyframe_duration :
+            return True
 
         # check for rotation and translation
         dr_odom = self.keyframes[-1].dr_pose.between(frame.dr_pose)
@@ -1329,3 +1502,264 @@ class SLAM(object):
                     subg, cand, ext_u = stack.pop()
         except IndexError:
             pass
+
+    def meters_to_pixels(self, points_m, image_params):
+        """
+        将点云坐标从米（meters）单位转换为图像像素（pixels）坐标。
+        此版本修正了可能的左右颠倒问题。
+        """
+        if not isinstance(points_m, np.ndarray):
+            points_m = np.array(points_m)
+            
+        is_single_point = (points_m.ndim == 1 and points_m.shape[0] == 2) or \
+                          (points_m.ndim == 2 and points_m.shape[0] == 1 and points_m.shape[1] == 2)
+        
+        if points_m.ndim == 1:
+            points_m = points_m.reshape(1, -1)
+
+        width_m = image_params['width_m']
+        height_m = image_params['height_m']
+        cols = image_params['cols']
+        rows = image_params['rows']
+
+        # --- 修正点 ---
+        # 车辆的 y 轴 (左为正) 对应图像的 c (列, x轴, 右为正)。
+        # 当 points_m[:, 1] (y_vehicle) 增大时，pixel_c 应该减小。
+        # 原来的公式是: ((-points_m[:, 1] * (cols / width_m)) + (cols / 2.0))
+        # 这个公式是正确的！-y_vehicle 意味着 y_vehicle 越大(越往左), -y_vehicle 越小, pixel_c 越小 (越靠左)
+        # 那么问题可能出在声呐图像本身或者数据源。
+        # 我们来尝试一个反向的映射，即去掉负号。
+        
+        # 原始公式 (理论上正确):
+        # pixel_c = ((-points_m[:, 1] * (cols / width_m)) + (cols / 2.0))
+        
+        # 修正尝试 (如果原始公式反了):
+        pixel_c = ((points_m[:, 1] * (cols / width_m)) + (cols / 2.0))
+        
+        # r (行, y轴, 下为正) 对应车辆的 x 轴 (前为正)
+        # 当 points_m[:, 0] (x_vehicle) 增大时, pixel_r 应该减小(更靠上)。
+        # 原来的公式是: ((-points_m[:, 0] + height_m) * (rows / height_m))
+        # 这个公式是正确的。
+        pixel_r = ((-points_m[:, 0] + height_m) * (rows / height_m))
+        
+        pixels = np.vstack((pixel_c, pixel_r)).T.astype(int)
+        
+        if is_single_point:
+            return (pixels[0, 0], pixels[0, 1])
+        else:
+            return pixels
+
+    def visualize_scan_matching(self,
+                                original_source_points: np.array,
+                                original_target_points: np.array,
+                                estimated_transform: gtsam.Pose2,
+                                source_kf: Keyframe,
+                                target_kf: Keyframe,
+                                output_dir="/home/hzr/catkin_ws/src/sonar-SLAM/output/matches"):
+        """
+        [REVISED with Pure Python Matching]
+        This version no longer calls `pcl.match`. It uses a pure Python/SciPy
+        implementation for finding correspondences.
+        """
+        try:
+            # --- 1. 安全性检查 (保持不变) ---
+            if (original_source_points is None or original_target_points is None or
+                    estimated_transform is None or source_kf is None or target_kf is None):
+                return
+            if not os.path.exists(output_dir): os.makedirs(output_dir)
+            if target_kf.image is None or source_kf.image is None: return
+
+            print(f"--- Visualizing matches for Target {target_kf.key} vs Source {source_kf.key} ---")
+
+            # --- 2. 内部执行变换和匹配 (使用我们自己的Python函数) ---
+            
+            # 步骤 a: 变换源点云
+            transformed_source_points = Keyframe.transform_points(original_source_points, estimated_transform)
+            
+            print(f"  Matching {len(transformed_source_points)} transformed source points against {len(original_target_points)} target points (using SciPy KDTree).")
+            
+            # 步骤 b: 调用我们自己的Python实现来寻找匹配
+            # <<< MODIFICATION: Call our new Python function >>>
+            indices, _ = self.find_correspondences_scipy(
+                original_target_points,
+                transformed_source_points,
+                self.point_noise # 使用相同的距离阈值
+            )
+            # <<< END OF MODIFICATION >>>
+            
+            # 步骤 c: 筛选出所有成功匹配的点的索引
+            matched_source_indices = np.where(indices[:, 0] != -1)[0]
+            num_matches = len(matched_source_indices)
+            
+            print(f"  Found {num_matches} valid correspondences to draw.")
+            if num_matches == 0:
+                return
+
+            # --- 3, 4, 5. 准备图像, 绘制, 保存 (完全保持不变) ---
+            # ... (这部分的所有代码都不需要修改) ...
+            target_display = cv2.cvtColor(cv2.cvtColor(target_kf.image, cv2.COLOR_BGR2GRAY), cv2.COLOR_GRAY2BGR)
+            source_display = cv2.cvtColor(cv2.cvtColor(source_kf.image, cv2.COLOR_BGR2GRAY), cv2.COLOR_GRAY2BGR)
+            h1, w1, _ = target_display.shape; h2, w2, _ = source_display.shape
+            if h1 != h2:
+                target_h = max(h1, h2)
+                target_display = cv2.resize(target_display, (int(w1 * target_h / h1), target_h))
+                source_display = cv2.resize(source_display, (int(w2 * target_h / h2), source_h))
+            combined_image = np.hstack((target_display, source_display))
+
+            num_to_draw = min(num_matches, 100)
+            random_indices_to_draw = np.random.choice(matched_source_indices, num_to_draw, replace=False)
+
+            for src_idx in random_indices_to_draw:
+                tgt_idx = indices[src_idx, 0]
+                p_source_m = original_source_points[src_idx]
+                p_target_m = original_target_points[tgt_idx]
+                px_source = self.meters_to_pixels(p_source_m, source_kf.image_params)
+                px_target = self.meters_to_pixels(p_target_m, target_kf.image_params)
+                px_source_combined = (px_source[0] + w1, px_source[1])
+                color = tuple(np.random.randint(50, 255, 3).tolist())
+                cv2.circle(combined_image, px_target, 3, color, -1, cv2.LINE_AA)
+                cv2.circle(combined_image, px_source_combined, 3, color, -1, cv2.LINE_AA)
+                cv2.line(combined_image, px_target, px_source_combined, color, 1, cv2.LINE_AA)
+
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(combined_image, f"Target (Frame {target_kf.key})", (10, 30), font, 1, (255, 255, 255), 2)
+            cv2.putText(combined_image, f"Source (Frame {source_kf.key})", (w1 + 10, 30), font, 1, (255, 255, 255), 2)
+            cv2.putText(combined_image, f"Matches: {num_matches}", (10, 70), font, 1, (0, 255, 255), 2)
+            timestamp = int(time.time() * 1000)
+            filename = f"match_scipy_{target_kf.key:04d}_vs_{source_kf.key:04d}_{timestamp}.png"
+            output_path = os.path.join(output_dir, filename)
+
+            print(f"  Saving SciPy-based match visualization to '{output_path}'...")
+            cv2.imwrite(output_path, combined_image)
+
+        except Exception as e:
+            print(f"!!!!!!!!!! AN ERROR OCCURRED IN visualize_scan_matching !!!!!!!!!!")
+            import traceback
+            traceback.print_exc()
+
+    def find_correspondences_scipy(self, target_points, source_points, max_distance):
+        """
+        A pure Python/SciPy implementation of the core logic of `pcl.match`.
+        Finds the nearest neighbor in target_points for each point in source_points.
+
+        Args:
+            target_points (np.array): The reference point cloud (shape: [N, 2]).
+            source_points (np.array): The query point cloud (shape: [M, 2]).
+            max_distance (float): The maximum distance to consider a match valid.
+
+        Returns:
+            tuple: (
+                indices (np.array): An array of shape [M, 1]. For each source point, it contains
+                                    the index of the matched target point, or target_points.shape[0]
+                                    if no match was found within max_distance.
+                distances_sq (np.array): An array of shape [M, 1] containing the squared distance
+                                         for each match. Infinity if no match was found.
+            )
+        """
+        if len(target_points) == 0 or len(source_points) == 0:
+            # 返回空的匹配结果
+            return np.full((len(source_points), 1), len(target_points), dtype=int), \
+                   np.full((len(source_points), 1), np.inf, dtype=float)
+
+        # 1. 在目标点云上构建一个 k-d 树，这会让搜索非常快
+        target_kdtree = KDTree(target_points)
+
+        # 2. 查询k-d树：为源点云中的每一个点，在树中找到最近的那个点
+        #    - k=1: 我们只关心最近的1个邻居
+        #    - distance_upper_bound: 这就是我们的 `max_dist`，只返回此距离内的匹配
+        #    - p=2: 使用欧几里得距离 (L2范数)
+        distances, indices = target_kdtree.query(
+            source_points, 
+            k=1, 
+            distance_upper_bound=max_distance,
+            p=2
+        )
+
+        # 3. 格式化输出，使其与 `pcl.match` 的返回格式兼容
+        #    - `query` 在找不到点时，会返回一个巨大的索引值 (len(target_points)) 和 inf 距离
+        #    - `pcl.match` 在找不到点时，返回 -1 索引。我们需要进行转换。
+        indices[indices == len(target_points)] = -1
+        
+        # 将距离转换为距离的平方，以匹配 `libpointmatcher` 的行为
+        distances_sq = distances**2
+
+        # 返回与 `pcl.match` 相同的形状 (M, 1)
+        return indices.reshape(-1, 1), distances_sq.reshape(-1, 1)
+
+
+    def visualize_feature_comparison(self, target_kf: Keyframe, source_kf: Keyframe, output_dir="/home/hzr/catkin_ws/src/sonar-SLAM/output/feature"):
+        """
+        Generates a side-by-side comparison image of target and source features
+        and saves it to a file instead of displaying it.
+        """
+        try:
+            print(f"--- Generating feature comparison image for Target {target_kf.key} vs Source {source_kf.key} ---")
+
+            # --- 确保输出目录存在 ---
+            if not os.path.exists(output_dir):
+                print(f"Output directory not found. Creating '{output_dir}'...")
+                os.makedirs(output_dir)
+
+            # --- 1. Helper function to prepare one image (保持不变) ---
+            def prepare_image_with_features(kf: Keyframe):
+                if kf is None or kf.image is None:
+                    return np.zeros((480, 640, 3), dtype=np.uint8)
+                if len(kf.image.shape) == 2 or kf.image.shape[2] == 1:
+                    gray = kf.image
+                else:
+                    gray = cv2.cvtColor(kf.image, cv2.COLOR_BGR2GRAY)
+                display_img = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+                if kf.points is not None and len(kf.points) > 0 and kf.image_params is not None:
+                    points_px = self.meters_to_pixels(kf.points, kf.image_params)
+                    for px in points_px:
+                        center = (int(px[0]), int(px[1]))
+                        cv2.circle(display_img, center, 2, (0, 255, 0), -1)
+                return display_img
+
+            # --- 2. Prepare both images (保持不变) ---
+            target_display = prepare_image_with_features(target_kf)
+            source_display = prepare_image_with_features(source_kf)
+            
+            # --- 3. Combine images (保持不变) ---
+            h1, w1, _ = target_display.shape
+            h2, w2, _ = source_display.shape
+            if h1 != h2:
+                target_h = max(h1, h2)
+                target_display = cv2.resize(target_display, (int(w1 * target_h / h1), target_h))
+                source_display = cv2.resize(source_display, (int(w2 * target_h / h2), source_h))
+            
+            combined_image = np.hstack((target_display, source_display))
+            
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(combined_image, f"Target (Frame {target_kf.key})", (10, 30), font, 1, (255, 255, 255), 2)
+            cv2.putText(combined_image, f"Source (Frame {source_kf.key})", (w1 + 10, 30), font, 1, (255, 255, 255), 2)
+
+            # --- 4. 调整尺寸并保存到文件 ---
+            final_h, final_w, _ = combined_image.shape
+            if final_w > 1920:
+                scale = 1920.0 / final_w
+                combined_image = cv2.resize(combined_image, (int(final_w * scale), int(final_h * scale)))
+
+            # 生成一个基于时间戳和帧索引的文件名，确保唯一性
+            timestamp = int(time.time() * 1000)
+            filename = f"comparison_{target_kf.key:04d}_vs_{source_kf.key:04d}_{timestamp}.png"
+            output_path = os.path.join(output_dir, filename)
+
+            # 保存图像
+            print(f"  Saving image to '{output_path}'...")
+            success = cv2.imwrite(output_path, combined_image)
+
+            if success:
+                print(f"  Successfully saved image.")
+            else:
+                print(f"  [ERROR] Failed to save image to '{output_path}'!")
+            
+            print("--- Finished generating feature comparison image ---")
+
+        except Exception as e:
+            print(f"!!!!!!!!!! AN ERROR OCCURRED IN visualize_feature_comparison !!!!!!!!!!")
+            import traceback
+            traceback.print_exc()
+            print(f"Error details: {e}")
+
+

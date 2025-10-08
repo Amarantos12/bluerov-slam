@@ -1,5 +1,0 @@
-OpenCL disabled, not looking for it
-ANN not found, disabling it in benchmarks
-FLANN found, enabling it in benchmarks
-Python version from interpreter is 3.8.10
-Python libs and executable found, looking for numpy and boost::python

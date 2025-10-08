@@ -1,2 +1,0 @@
-- setup-file:
-    local-name: /home/hzr/catkin_ws/devel/.private/sonar_denoise/setup.sh

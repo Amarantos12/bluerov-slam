@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/hzr/catkin_ws/build/sonar_denoise
 include CMakeFiles/_sonar_denoise_generate_messages_check_deps_OculusPing.dir/progress.make
 
 CMakeFiles/_sonar_denoise_generate_messages_check_deps_OculusPing:
-	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py sonar_denoise /home/hzr/catkin_ws/src/sonar_denoise/msg/OculusPing.msg sensor_msgs/CompressedImage:sonar_denoise/OculusFire:std_msgs/Header
+	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py sonar_denoise /home/hzr/catkin_ws/src/sonar_denoise/msg/OculusPing.msg sensor_msgs/CompressedImage:std_msgs/Header:sonar_denoise/OculusFire
 
 _sonar_denoise_generate_messages_check_deps_OculusPing: CMakeFiles/_sonar_denoise_generate_messages_check_deps_OculusPing
 _sonar_denoise_generate_messages_check_deps_OculusPing: CMakeFiles/_sonar_denoise_generate_messages_check_deps_OculusPing.dir/build.make

@@ -32,7 +32,11 @@ Not searching for unused variables given on the command line.
 [36m--[0m Using Python nosetests: /usr/bin/nosetests3
 [36m--[0m catkin 0.8.12
 [36m--[0m BUILD_SHARED_LIBS is on
+[36m--[0m Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+[36m--[0m sonar_denoise: 3 messages, 0 services
 [36m--[0m Installing devel-space wrapper /home/hzr/catkin_ws/src/sonar_denoise/scripts/sonar_imgtopoint.py to /home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/sonar_denoise
+[36m--[0m Installing devel-space wrapper /home/hzr/catkin_ws/src/sonar_denoise/scripts/odom_pose.py to /home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/sonar_denoise
+[36m--[0m Installing devel-space wrapper /home/hzr/catkin_ws/src/sonar_denoise/scripts/dvl_imu_depth.py to /home/hzr/catkin_ws/devel/.private/sonar_denoise/lib/sonar_denoise
 [36m--[0m Configuring done
 [36m--[0m Generating done
 [36m--[0m Build files have been written to: /home/hzr/catkin_ws/build/sonar_denoise
