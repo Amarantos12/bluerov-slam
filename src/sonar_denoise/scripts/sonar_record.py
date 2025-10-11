@@ -6,8 +6,8 @@ import numpy as np
 from tqdm import tqdm
 
 # 定义路径
-bag_file = '/home/hzr/rosbag/ARACATI_2017_8bits_full.bag'
-output_folder = '/home/hzr/rosbag/Aracati_full'
+bag_file = '/home/hzr/rosbag/aurora.bag'
+output_folder = '/home/hzr/rosbag/aurora_dikaer'
 
 # 确保输出文件夹存在
 if not os.path.exists(output_folder):
@@ -18,17 +18,16 @@ bridge = cv_bridge.CvBridge()
 
 # 打开 bag 文件并统计消息数量以设置进度条
 with rosbag.Bag(bag_file, 'r') as bag:
-    total_msgs = bag.get_message_count('/son/compressed')
+    total_msgs = bag.get_message_count('/rexrov/blueview_m450/sonar_image')
     print(f"总共检测到 {total_msgs} 条消息")
 
     # 使用 tqdm 创建进度条
     with tqdm(total=total_msgs, desc="处理图像", unit="帧") as pbar:
         # 遍历指定话题的消息
-        for topic, msg, t in bag.read_messages(topics=['/son/compressed']):
+        for topic, msg, t in bag.read_messages(topics=['/rexrov/blueview_m450/sonar_image']):
             try:
-                # 将压缩图像转换为 OpenCV 格式
-                np_arr = np.frombuffer(msg.data, np.uint8)
-                image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+                # 将 sensor_msgs/Image 转换为 OpenCV 格式
+                image = bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
                 
                 # 确保图像有效
                 if image is None:
@@ -36,7 +35,7 @@ with rosbag.Bag(bag_file, 'r') as bag:
                     pbar.update(1)
                     continue
                 
-                # 转换为灰度图
+                # 转换为灰度图（重建需要单通道强度图）
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
                 
                 # 获取时间戳
