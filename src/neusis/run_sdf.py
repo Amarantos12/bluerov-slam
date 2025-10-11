@@ -359,7 +359,9 @@ class Runner:
 
 
 if __name__=='__main__':
-    torch.set_default_tensor_type('torch.cuda.FloatTensor')
+    # torch.set_default_tensor_type('torch.cuda.FloatTensor')
+    torch.set_default_dtype(torch.float32)
+    torch.set_default_device('cuda' if torch.cuda.is_available() else 'cpu')
     FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
     logging.getLogger('matplotlib.font_manager').disabled = True
     logging.basicConfig(level=logging.DEBUG, format=FORMAT)
